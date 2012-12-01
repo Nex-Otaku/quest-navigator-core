@@ -140,7 +140,8 @@ function qspInitNext()
 
 function onPhoneGapDeviceReady() {
     // Now safe to use the PhoneGap API
-	qspIsAndroid = device.platform == "Android";
+	qspIsAndroid = device.platform === "Android";
+	qspIsIos = (device.platform === "iPhone") || (device.platform === "iPad");
 	if (qspIsAndroid)
 	{
 		// Для Android переключаем режим моста в POLLING, потому что он самый быстрый из надежных
@@ -150,5 +151,9 @@ function onPhoneGapDeviceReady() {
 		// По кнопке MENU вызываем диалог системного меню
 		document.addEventListener("menubutton", qspShowSystemMenu, false);
 	}
-    qspInitNext();
+	// Вызывается, когда мы узнали, на каком устройстве запущена игра
+	if (typeof(qspSkinOnDeviceSet) === 'function')
+		qspSkinOnDeviceSet();
+
+	qspInitNext();
 }

@@ -15,6 +15,7 @@ var qspInvObjs = null;
 var qspSplashHidden = false;
 var qspPreloadingImageArray = [];
 var qspIsAndroid = false;
+var qspIsIos = false;
 var qspScreenHD = false;
 
 var qspHandlerViewClick = function() { qspCloseView(); };
@@ -57,8 +58,16 @@ function qspInitApi() {
         alert("Не подключена библиотека QspLibXXX.js!");
     
     //PG
-    if (qspLibMode == "PHONEGAP")
+    if (qspLibMode === "PHONEGAP")
+	{
         document.addEventListener("deviceready", onPhoneGapDeviceReady, false);
+	}
+	else
+	{
+		// Вызывается, когда мы узнали, на каком устройстве запущена игра
+		if (typeof(qspSkinOnDeviceSet) === 'function')
+			qspSkinOnDeviceSet();
+	}
 		
 	// Fallback to JQuery "animate" if no CSS3 transition support
 	if (!$.support.transition)
@@ -67,7 +76,7 @@ function qspInitApi() {
 	qspDetectScreenHD();
 
 	// Skin callback
-	if (typeof(qspSkinOnInitApi) == 'function')
+	if (typeof(qspSkinOnInitApi) === 'function')
 		qspSkinOnInitApi();
 }
 
