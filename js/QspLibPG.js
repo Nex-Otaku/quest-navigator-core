@@ -144,8 +144,6 @@ function onPhoneGapDeviceReady() {
 	qspIsIos = (device.platform === "iPhone") || (device.platform === "iPad");
 	if (qspIsAndroid)
 	{
-		// Для Android переключаем режим моста в POLLING, потому что он самый быстрый из надежных
-		cordova.exec.setNativeToJsBridgeMode(cordova.exec.nativeToJsModes.POLLING);
 		// Переопределяем поведение кнопки BACK
 		document.addEventListener("backbutton", qspBackKeyPressed, false);
 		// По кнопке MENU вызываем диалог системного меню
