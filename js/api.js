@@ -34,6 +34,8 @@ function qspInitApi() {
 	qspCurDialog = "";
 	qspUiBlocked = false;
 	qspSetDialogs();
+	
+	$(document.body).prepend('<div id="qsp-js-sandbox" style="display:none;"></div>');
 
     $(document).bind("mousedown touchstart MozTouchDown", function(e) {
               // Небольшой трюк, чтобы словить событие не только от мыши, но и от нажатия тачскрина
@@ -153,6 +155,8 @@ function qspSetGroupedContent(content)
         qspSetVarsContent(content.vars);
     if (typeof(content.objs) !== 'undefined')
         qspSetInvContent(content.objs);
+    if (typeof(content.js) !== 'undefined')
+        qspExecJS(content.js);
     qspApplyScrollsVisibility();
 	
 	if (typeof(qspSkinOnSetGroupedContent) === 'function')
@@ -305,6 +309,13 @@ function qspFillInvWithObjs()
 	// Skin callback
 	if (typeof(qspSkinOnFillInvWithObjs) == 'function')
 		qspSkinOnFillInvWithObjs();
+}
+
+function qspExecJS(cmd) 
+{
+	// Выполняем яваскрипт, переданный из игры командой EXEC('JS:...')
+	cmd = '<script>' + cmd + '</script>';
+	$('#qsp-js-sandbox').html(cmd);
 }
 
 function qspUpdateSkin(skin)
