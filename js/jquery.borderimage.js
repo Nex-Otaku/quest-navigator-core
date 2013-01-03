@@ -52,10 +52,16 @@
 				thisEl.css({'border-image':'none', 'border-color':'transparent'});
 				var centerWidth = opts.fullImageSizeW - parseInt(opts.leftWidth, 10) - parseInt(opts.rightWidth, 10);
 				var centerHeight = opts.fullImageSizeH - parseInt(opts.topWidth, 10) - parseInt(opts.bottomWidth, 10);
+				var leftRepeatYWidth = parseInt(opts.leftWidth, 10) + 1;
+				var rightRepeatYWidth = parseInt(opts.rightWidth, 10) + 1;
+				var topRepeatXHeight = parseInt(opts.topWidth, 10) + 1;
+				var bottomRepeatXHeight = parseInt(opts.bottomWidth, 10) + 1;
 				var horRepeatMode = opts.repeatCenterY ? 'repeat-y' : 'no-repeat'; // left, right
 				var vertRepeatMode = opts.repeatCenterX ? 'repeat-x' : 'no-repeat'; // top, bottom
-				var horBackSize = opts.repeatCenterY ? ('100% ' + centerHeight + 'px') : '100% 100%'; // left, right
-				var vertBackSize = opts.repeatCenterX ? ('' + centerWidth + 'px 100%') : '100% 100%'; // top, bottom
+				var leftBackSize = opts.repeatCenterY ? ('' + leftRepeatYWidth + 'px ' + centerHeight + 'px') : '100% 100%'; // left, right
+				var rightBackSize = opts.repeatCenterY ? ('' + rightRepeatYWidth + 'px ' + centerHeight + 'px') : '100% 100%'; // left, right
+				var topBackSize = opts.repeatCenterX ? ('' + centerWidth + 'px ' + topRepeatXHeight + 'px') : '100% 100%'; // top, bottom
+				var bottomBackSize = opts.repeatCenterX ? ('' + centerWidth + 'px ' + bottomRepeatXHeight + 'px') : '100% 100%'; // top, bottom
 				var cornerBackSize = '' + opts.fullImageSizeW + 'px ' + opts.fullImageSizeH + 'px';
 				// center
 				if(opts.transparent === false){
@@ -89,20 +95,20 @@
 				}
 				// top
 				topMost.css({'top':'-'+opts.topWidth, 'left':'0px','right':'0px','height':opts.topWidth,
-					'background':'url('+opts.topImage+') center top '+vertRepeatMode, 
-					'background-size':vertBackSize});
+					'background':'url('+opts.topImage+') left top '+vertRepeatMode, 
+					'background-size':topBackSize});
 				// bottom
 				bottomMost.css({'bottom':'-'+opts.bottomWidth, 'left':'0px','right':'0px','height':opts.bottomWidth,
-					'background':'url('+opts.bottomImage+') center bottom '+vertRepeatMode, 
-					'background-size':vertBackSize});
+					'background':'url('+opts.bottomImage+') left bottom '+vertRepeatMode, 
+					'background-size':bottomBackSize});
 				// left
 				leftMost.css({'left':'-'+opts.leftWidth, 'top':'0px','bottom':'0px','width':opts.leftWidth,
-					'background':'url('+opts.leftImage+') center left '+horRepeatMode, 
-					'background-size':horBackSize});
+					'background':'url('+opts.leftImage+') top left '+horRepeatMode, 
+					'background-size':leftBackSize});
 				// right
 				rightMost.css({'right':'-'+opts.rightWidth, 'top':'0px','bottom':'0px','width':opts.rightWidth,
-					'background':'url('+opts.rightImage+') center right '+horRepeatMode, 
-					'background-size':horBackSize});
+					'background':'url('+opts.rightImage+') top right '+horRepeatMode, 
+					'background-size':rightBackSize});
 				// top right
 				topRight.css({'top':'-'+opts.topWidth,'right':'-'+opts.rightWidth,'height':opts.topWidth,'width':opts.rightWidth,
 					'background':'url('+opts.fullImage+') right top no-repeat',
