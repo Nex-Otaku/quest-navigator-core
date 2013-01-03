@@ -10,6 +10,7 @@ var qspUiBlocked = true;
 var qspSaveSlotsModeOpen = true;
 var qspGameSkin = null;
 var qspMainContent = null;
+var qspMainViewWasScrolled = false;
 var qspSelectedObjectIndex = -1;
 var qspInvObjs = null;
 var qspSplashHidden = false;
@@ -33,6 +34,7 @@ function qspInitApi() {
 	qspDialogOpened = false;
 	qspCurDialog = "";
 	qspUiBlocked = false;
+	qspMainViewWasScrolled = false;
 	qspSetDialogs();
 	
 	$(document.body).prepend('<div id="qsp-js-sandbox" style="display:none;"></div>');
@@ -117,7 +119,7 @@ function qspApplyScrollsVisibility()
 	// Это хак для Андроида. Без перезаполнения основного описания, 
 	// возникают странные глюки после отображения qsp-skin-overlay (т.е. при показе любого диалога)
 	if (qspMainContent != null)
-		qspSetMainContent(qspMainContent);
+		qspSetMainContent(qspMainContent, false);
 	
 	qspLoadRetinaImages();
 }
@@ -148,7 +150,7 @@ function qspSetGroupedContent(content)
     if (typeof(content.skin) !== 'undefined')
         qspUpdateSkin(content.skin);
     if (typeof(content.main) !== 'undefined')
-        qspSetMainContent(content.main);
+        qspSetMainContent(content.main, true);
     if (typeof(content.acts) !== 'undefined')
         qspSetActsContent(content.acts);
     if (typeof(content.vars) !== 'undefined')
@@ -171,9 +173,14 @@ function qspSetGroupedContent(content)
     }
 }
 
-function qspSetMainContent(content) 
+function qspSetMainContent(content, initial) 
 {
-	qspMainContent = content;
+	if (initial)
+	{
+		qspMainViewWasScrolled = false;
+		qspMainContent = content;
+	}
+	
 	$("#qsp-main").empty();
     content = qspApplyTemplateForText(qspGameSkin.mainDescTextFormat, content);
     $("#qsp-main").append(content);
@@ -188,8 +195,9 @@ function qspRefreshMainScroll()
             if (typeof(qspSkinOnMainScrollRefresh) == 'function')
                 qspSkinOnMainScrollRefresh();
 			qsp_iScroll_main.refresh();
-			if ((qspGameSkin != null) && (qspGameSkin.disableScroll == 0))
+			if ((qspGameSkin != null) && (qspGameSkin.disableScroll == 0) && !qspMainViewWasScrolled)
             {
+				qspMainViewWasScrolled = true;
 				qsp_iScroll_main.scrollTo(0, 0, 0, false);
             }
             // Skin callback
