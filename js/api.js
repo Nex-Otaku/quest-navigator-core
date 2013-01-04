@@ -121,7 +121,7 @@ function qspApplyScrollsVisibility()
 	if (qspMainContent != null)
 		qspSetMainContent(qspMainContent, false);
 	
-	qspLoadRetinaImages();
+	qspLoadRetinaImages('img');
 }
 
 function qspShowSystemMenu()
@@ -313,6 +313,7 @@ function qspFillInvWithObjs()
                                  (selected ? "" : "</a>") +
                                  "</div>");
 		}
+		qspLoadRetinaImages('#qsp-inv img');
 	}
 	// Skin callback
 	if (typeof(qspSkinOnFillInvWithObjs) == 'function')
@@ -1195,13 +1196,11 @@ function qspBackKeyPressed()
 	}
 }
 
-function qspLoadRetinaImages()
+function qspLoadRetinaImages(selector)
 {
 	if (qspScreenHD)
 	{
-		setTimeout(function () {
-			$('img').retina('@2x');
-		}, 0);
+		$(selector).retina('@2x');
 	}
 }
 
