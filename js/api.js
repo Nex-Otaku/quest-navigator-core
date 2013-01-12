@@ -1087,8 +1087,6 @@ function qspSetPressableButtons()
 			{
 				t.attr('src', src2);
 				t.attr('data-pressed', src1);
-				// Обновляем картинку внешнего блока, для поддержки Retina-дисплеев
-				t.updateSrcRetina(src2);
 			}
 			
 			// Для кнопки задаем класс "pressed"
@@ -1109,8 +1107,6 @@ function qspSetPressableButtons()
 			{
 				t.attr('src', src2);
 				t.attr('data-pressed', src1);
-				// Обновляем картинку внешнего блока, для поддержки Retina-дисплеев
-				t.updateSrcRetina(src2);
 			}
 
 			t = t.hasClass('qsp-skin-button') ? t : t.parents(".qsp-skin-button");
@@ -1225,7 +1221,7 @@ function qspDetectScreenHD()
 	{
 		// Скрываем все картинки, заданные тегом IMG для Retina-дисплеев.
 		// Нужно для того, чтобы не было "моргания" при подгрузке HD-версий
-		$(document.head).append('<style> body.retina img { opacity:0; } </style>');
+		$(document.head).append('<style> body.retina img:not(.processed-retina-img) { opacity:0; } </style>');
 		// Добавляем класс "retina" к BODY
 		$(document.body).addClass('retina');
 	}

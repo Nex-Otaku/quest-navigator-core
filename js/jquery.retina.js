@@ -20,58 +20,41 @@
 	18 November 2012
 */
 
-(function( $ ){
-	$.fn.retina = function(retina_part) {
+(function ($) {
+	$.fn.retina = function (retina_part) {
 		// Set default retina file part to '-2x'
 		// Eg. some_image.jpg will become some_image-2x.jpg
 		var settings = {'retina_part': '-2x'};
-		if(retina_part) jQuery.extend(settings, { 'retina_part': retina_part });
+		if (retina_part) {
+			jQuery.extend(settings, { 'retina_part': retina_part });
+		}
 
-		
-		this.each(function(index, element) {
-			if (!$(element).attr('src')) return;
-			
+
+		this.each(function (index, element) {
 			// Проверка, что мы уже обработали этот IMG
-			if ($(element).parent().hasClass('retina-img-wrapper'))
+			if ($(element).hasClass('processed-retina-img')) {
 				return;
-			
-			var img = $(element);
-			var new_image_src = img.attr('src').replace(/(.+)(\.\w{3,4})$/, "$1"+ settings['retina_part'] +"$2");
-			// Оборачиваем IMG в DIV
-			img.wrap('<div class="retina-img-wrapper"></div>');
-			var parentDiv = img.parent();
-			// Копируем стили из IMG в DIV
-			var propList = ['float', 
-							'margin-top', 'margin-bottom', 'margin-right', 'margin-left', 
-							'border-top', 'border-bottom', 'border-right', 'border-left', 
-							'padding-top', 'padding-bottom', 'padding-right', 'padding-left', 
-							'background-color'];
-			var imgProp = {};
-			var name;
-			for(var i = 0, l = propList.length; i < l; i++){
-				name = propList[i];
-				imgProp[name] = img.css(name);
 			}
-			parentDiv.css(imgProp);
-			// Настраиваем стили DIV и IMG, чтобы DIV был точно по размеру IMG
-			parentDiv.css({	'display':'inline-block', 
-							'background-image':'url("'+new_image_src+'")',
-							'background-size':'100% 100%'});
-			img.css({'display':'block', 'margin':'0', 'padding':'0', 'border':'none'});
+			var img = $(element);
+			img.addClass('processed-retina-img');
+			if (!img.attr('src')) {
+				return;
+			}
+			
+			var sizes = img.attr('src').match(/-(\d+)x(\d+)(\.\w{3,4})$/);
+			if (sizes === null) {
+				return;
+			}
+			img.attr('width', sizes[1]);
+			img.attr('height', sizes[2]);
+
+			var new_image_src = img.attr('src').replace(/(.+)(\.\w{3,4})$/, "$1" + settings.retina_part + "$2");
+			img.attr('src', new_image_src);
+			if (img.attr('data-pressed')) {
+				var new_image_src2 = img.attr('data-pressed').replace(/(.+)(\.\w{3,4})$/, "$1" + settings.retina_part + "$2");
+				img.attr('data-pressed', new_image_src2);
+			}
 		});
 		return this;
-	}
-})( jQuery );
-
-(function( $ ){
-	$.fn.updateSrcRetina = function(path) {
-		// Обновляем картинку внешнего блока, для поддержки Retina-дисплеев
-		if (qspScreenHD)
-		{
-			var p = this.parent();
-			if (p.hasClass('retina-img-wrapper'))
-				p.css('background-image', 'url("'+qspMakeRetinaPath(path)+'")');
-		}
-		return;
-	}
-})( jQuery );
+	};
+})(jQuery);
