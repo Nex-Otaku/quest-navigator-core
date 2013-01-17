@@ -1118,6 +1118,9 @@ function qspSetPressableButtons()
 				}, 200);
 			}
           });
+	
+	// Убираем задержку кликов на тач-девайсах (fastclick.js)
+	new FastClick(document.body);
 }
 
 function qspApplyTemplateForText(template, text)
