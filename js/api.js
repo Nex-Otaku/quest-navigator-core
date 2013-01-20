@@ -232,24 +232,20 @@ function qspRefreshVarsScroll()
 
 function qspSetActsContent(acts, under_desc) 
 {
-	var actsId = qspGameSkin.mainDescIntegratedActions == 1 ? "#qsp-acts1" : "#qsp-acts2";
-	$(actsId).empty();
+	$("#qsp-acts").empty();
 	if (acts)
 	{
         for (i = 0; i < acts.length; i++) {
 			//Для мобильной версии отключим, иначе слишком тормозит
 			/*   " onmouseover='javascript:qspSelectAction(\"" + i + "\");' " + */
-			$(actsId).append("<div class='qsp-action qsp-skin-button'><a " + 
+			$("#qsp-acts").append("<div class='qsp-action qsp-skin-button'><a " + 
 			" onclick='javascript:qspExecuteAction(\"" + i + "\");'>" + 
                                   qspApplyTemplateForTextAndImage(qspGameSkin.actsListItemFormat, acts[i].desc, acts[i].image) + 
                                   "</a></div>");
 		}
 	}
 
-	if (qspGameSkin.mainDescIntegratedActions == 1)
-		$("#qsp-acts1").imagesLoaded().always(qspRefreshMainScroll);
-	else
-		$("#qsp-acts2").imagesLoaded().always(qspRefreshActsScroll);
+	$("#qsp-acts").imagesLoaded().always(qspRefreshMainScroll);
 } 
 
 function qspRefreshActsScroll()
@@ -353,6 +349,7 @@ function qspUpdateSkin(skin)
 	jsSkin.disableAutoRef = disableAutoRef;
 	*/
 
+	/*
 	if (!$("#qsp-back-image").hasClass("protected"))
 	{
 		$("#qsp-back-image").empty();
@@ -360,7 +357,7 @@ function qspUpdateSkin(skin)
 		{
 			$("#qsp-back-image").append("<img src=\"" + qspGameSkin.mainBackImagePath + "\" >");
 		}
-	}
+	}*/
 		
 	/* Непонятно, как эту штуку делать
 	$("#qsp-top-image").empty();
@@ -368,6 +365,7 @@ function qspUpdateSkin(skin)
 		$("#qsp-top-image").append("<img src=\"" + qspGameSkin.mainTopImagePath + "\">");
 	*/
 
+	/*
 	if (!$("#qsp-system-menu-button").hasClass("protected"))
 	{
 		if (qspGameSkin.sysMenuButtonImagePath.length > 0)
@@ -383,7 +381,7 @@ function qspUpdateSkin(skin)
 		{
 			$('#qsp-system-menu-button').hide();
 		}
-	}
+	}*/
     
 	$(document.body).css("backgroundColor", qspGameSkin.backColor);
 
@@ -417,7 +415,7 @@ function qspUpdateSkin(skin)
 	jsSkin.menuEffectTime = menuEffectTime;
 	// ----------------------
 	jsSkin.mainDescTextFormat = mainDescTextFormat;
-	jsSkin.mainDescIntegratedActions = mainDescIntegratedActions;
+	убрано - jsSkin.mainDescIntegratedActions = mainDescIntegratedActions;
 	jsSkin.mainDescBackImagePath = mainDescBackImagePath;
 	jsSkin.mainDescX = mainDescX;
 	jsSkin.mainDescY = mainDescY;
@@ -425,11 +423,12 @@ function qspUpdateSkin(skin)
 	jsSkin.mainDescH = mainDescH;
 	*/
 
+	/*
 	if (!$("#qsp-wrapper-main").hasClass("protected"))
 	{
 		$("#qsp-wrapper-main").css("left", qspGameSkin.mainDescX).css("top", qspGameSkin.mainDescY)
 			.css("width", qspGameSkin.mainDescW).css("height", qspGameSkin.mainDescH).css("background-image", "url(" + qspGameSkin.mainDescBackImagePath + ")");
-	}
+	}*/
 			
 	/*
 	// ----------------------
@@ -441,11 +440,12 @@ function qspUpdateSkin(skin)
 	jsSkin.varsDescH = varsDescH;
 	*/
 
+	/*
 	if (!$("#qsp-wrapper-vars").hasClass("protected"))
 	{
 		$("#qsp-wrapper-vars").css("left", qspGameSkin.varsDescX).css("top", qspGameSkin.varsDescY)
 			.css("width", qspGameSkin.varsDescW).css("height", qspGameSkin.varsDescH).css("background-image", "url(" + qspGameSkin.varsDescBackImagePath + ")");
-	}
+	}*/
 
 	/*
 	// ----------------------
@@ -458,12 +458,13 @@ function qspUpdateSkin(skin)
 	jsSkin.actsListH = actsListH;
 	*/
 
+	/*
 	if (!$("#qsp-wrapper-acts").hasClass("protected"))
 	{
 		//Само собой, менять позицию этого дива мы можем только если действия расположены отдельно от основного окна описания
 		$("#qsp-wrapper-acts").css("left", qspGameSkin.actsListX).css("top", qspGameSkin.actsListY)
 			.css("width", qspGameSkin.actsListW).css("height", qspGameSkin.actsListH).css("background-image", "url(" + qspGameSkin.actsListBackImagePath + ")");
-	}
+	}*/
 
 	/*
 	// ----------------------
@@ -476,11 +477,12 @@ function qspUpdateSkin(skin)
 	jsSkin.objsListH = objsListH;
 	*/
 
+	/*
 	if (!$("#qsp-wrapper-objs").hasClass("protected"))
 	{
 		$("#qsp-wrapper-objs").css("left", qspGameSkin.objsListX).css("top", qspGameSkin.objsListY)
 			.css("width", qspGameSkin.objsListW).css("height", qspGameSkin.objsListH).css("background-image", "url(" + qspGameSkin.objsListBackImagePath + ")");
-	}
+	}*/
 			
 	/*
 	// ----------------------
@@ -491,11 +493,12 @@ function qspUpdateSkin(skin)
 	jsSkin.viewH = viewH;
 	*/
 
+	/*
 	if (!$("#qsp-dialog-view").hasClass("protected"))
 	{
 		$("#qsp-dialog-view-image-container").css("left", qspGameSkin.viewX).css("top", qspGameSkin.viewY)
 			.css("width", qspGameSkin.viewW).css("height", qspGameSkin.viewH);
-	}
+	}*/
 	// Если выставлен флаг viewAlwaysShow, то мы не рисуем оверлей
 	if (qspGameSkin.viewAlwaysShow == 1)
 		$("#qsp-dialog-view .qsp-skin-overlay").hide();
@@ -537,6 +540,7 @@ function qspUpdateSkin(skin)
 	*/
 	// Если задан класс "protected", значит внешний вид диалога полностью определяется кастомным CSS
 	// Иначе мы задаем фиксированные координаты из игры
+	/*
 	if (!$("#qsp-dialog-input").hasClass("protected"))
 	{
 		// Cancel не рисуем
@@ -562,7 +566,7 @@ function qspUpdateSkin(skin)
 		}
 		$("#qsp-button-input-ok").css("left", qspGameSkin.inputX + qspGameSkin.inputOkX).css("top", qspGameSkin.inputY + qspGameSkin.inputOkY);
 	}
-	
+	*/
 	/*
 	// ----------------------
 	jsSkin.menuFixedSize = menuFixedSize;
@@ -580,12 +584,14 @@ function qspUpdateSkin(skin)
 	jsSkin.menuListH = menuListH;
 	*/
 	
+	/*
 	if (!$("#qsp-dialog-user-menu").hasClass("protected"))
 	{
 		$("#qsp-dialog-user-menu").css("width", qspGameSkin.menuListW).css("padding", qspGameSkin.menuPadding)
 			.css("border-width", qspGameSkin.menuBorder).css("border-color", qspGameSkin.menuBorderColor).css("border-style", "solid")
 			.css("width", qspGameSkin.menuListW).css("backgroundColor", qspGameSkin.backColor);
 	}
+	*/
 	
 	/*
 	// ----------------------
@@ -601,6 +607,7 @@ function qspUpdateSkin(skin)
 	jsSkin.msgOkX = msgOkX;
 	jsSkin.msgOkY = msgOkY;
 	*/
+	/*
 	if (!$("#qsp-dialog-msg").hasClass("protected"))
 	{
 		$("#qsp-dialog-msg-background").empty();
@@ -634,7 +641,7 @@ function qspUpdateSkin(skin)
 		}
 		$("#qsp-button-error-ok").css("left", qspGameSkin.msgX + qspGameSkin.msgOkX).css("top", qspGameSkin.msgY + qspGameSkin.msgOkY);
 	}
-	
+	*/
 
 	//STUB
 	//Потом сделать установку координат системного меню через игру
@@ -648,14 +655,19 @@ function qspUpdateSkin(skin)
 //											.css("width", 356).css("height", 338);
 
 	//Показываем либо скрываем окно действий
-	if ((qspGameSkin.showActs == 1) && (qspGameSkin.mainDescIntegratedActions == 1))
-		$("#qsp-acts1").show();
-	else
-		$("#qsp-acts1").hide();
-	if ((qspGameSkin.showActs == 1) && (qspGameSkin.mainDescIntegratedActions != 1))
-		$("#qsp-wrapper-acts").show();
-	else
-		$("#qsp-wrapper-acts").hide();
+	if ($('#qsp-wrapper-acts').length) {
+		if (qspGameSkin.showActs == 1) {
+			$('#qsp-wrapper-acts').show();
+		} else {
+			$('#qsp-wrapper-acts').hide();
+		}
+	} else {
+		if (qspGameSkin.showActs == 1) {
+			$('#qsp-acts').show();
+		} else {
+			$('#qsp-acts').hide();
+		}
+	}
 	//Показываем либо скрываем окно инвентаря
 	if (qspGameSkin.showObjs == 1)
 		$("#qsp-wrapper-objs").show();
