@@ -88,15 +88,25 @@ function qspInitScrolls() {
 	document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
 
 	if ($('#qsp-scroller-main').length)
-		qsp_iScroll_main = new iScroll("qsp-wrapper-main", {hScroll:false, bounce:false, hScrollbar:false, hideScrollbar:false, fadeScrollbar:false});
+		qsp_iScroll_main = new iScroll("qsp-wrapper-main", {hScroll:false, bounce:false, hScrollbar:false, hideScrollbar:false, fadeScrollbar:false, onBeforeScrollEnd:qspOnBeforeScrollEnd});
 	if ($('#qsp-scroller-acts').length)
-		qsp_iScroll_acts = new iScroll("qsp-wrapper-acts", {hScroll:false, bounce:false, hScrollbar:false, hideScrollbar:false, fadeScrollbar:false});
+		qsp_iScroll_acts = new iScroll("qsp-wrapper-acts", {hScroll:false, bounce:false, hScrollbar:false, hideScrollbar:false, fadeScrollbar:false, onBeforeScrollEnd:qspOnBeforeScrollEnd});
 	if ($('#qsp-scroller-vars').length)
-		qsp_iScroll_vars = new iScroll("qsp-wrapper-vars", {hScroll:false, bounce:false, hScrollbar:false, hideScrollbar:false, fadeScrollbar:false});
+		qsp_iScroll_vars = new iScroll("qsp-wrapper-vars", {hScroll:false, bounce:false, hScrollbar:false, hideScrollbar:false, fadeScrollbar:false, onBeforeScrollEnd:qspOnBeforeScrollEnd});
 	if ($('#qsp-scroller-objs').length)
-		qsp_iScroll_objs = new iScroll("qsp-wrapper-objs", {hScroll:false, bounce:false, hScrollbar:false, hideScrollbar:false, fadeScrollbar:false});
+		qsp_iScroll_objs = new iScroll("qsp-wrapper-objs", {hScroll:false, bounce:false, hScrollbar:false, hideScrollbar:false, fadeScrollbar:false, onBeforeScrollEnd:qspOnBeforeScrollEnd});
 	if ($('#qsp-scroller-msg').length)
-		qsp_iScroll_msg = new iScroll("qsp-wrapper-msg", {hScroll:false, bounce:false, hScrollbar:false, hideScrollbar:false, fadeScrollbar:false});
+		qsp_iScroll_msg = new iScroll("qsp-wrapper-msg", {hScroll:false, bounce:false, hScrollbar:false, hideScrollbar:false, fadeScrollbar:false, onBeforeScrollEnd:qspOnBeforeScrollEnd});
+}
+
+function qspOnBeforeScrollEnd(e)
+{
+	// Не засчитываем клик, если контент скроллился
+	if (this.moved)
+	{
+		var point = this.hasTouch ? e.changedTouches[0] : e;
+		gcb_clickBuster(point);
+	}
 }
 
 function qspApplyScrollsVisibility()
@@ -1077,11 +1087,8 @@ function qspSetPressableButtons()
 	var isTouchPad = (/hp-tablet/gi).test(navigator.appVersion);
     var hasTouch = 'ontouchstart' in window && !isTouchPad;
 	
-	// Лишние клики замечены только на тач-скринах
-	if (hasTouch)
-	{
-		document.addEventListener('click', gcb_clickBuster, true);
-	}
+	// Убиваем лишние клики
+	document.addEventListener('click', gcb_clickBuster, true);
 	
 	var START_EV = hasTouch ? 'touchstart' : 'mousedown';
 	var END_EV = hasTouch ? 'touchend touchcancel' : 'mouseup dragend';
