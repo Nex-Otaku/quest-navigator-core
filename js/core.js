@@ -1180,7 +1180,7 @@ function gcb_popClick ()
  * @param nopop no use here; passed on to gcb_addClick
  *
  */
-function gcb_ignoreClick (x, y, nopop)
+function gcb_ignoreClick (x, y, nopop, noadd)
 {
     for (var i=0;i<gcb_clickPointX.length;i++)
     {
@@ -1191,7 +1191,8 @@ function gcb_ignoreClick (x, y, nopop)
         if ((x == testX) && (y == testY))
             return true;
     }
-    gcb_addClick (x, y, nopop);
+	if (!noadd)
+		gcb_addClick (x, y, nopop);
     return false;
 }
 
@@ -1208,6 +1209,14 @@ function gcb_clickBuster (event)
     if (gcb_ignoreClick(event.clientX, event.clientY))
     {
         //console.log ("... and ignored it.");
+        event.stopPropagation();
+        event.preventDefault();
+    }
+}
+function gcb_clickBusterNoTouch (event)
+{
+    if (gcb_ignoreClick(event.clientX, event.clientY, false, true))
+    {
         event.stopPropagation();
         event.preventDefault();
     }

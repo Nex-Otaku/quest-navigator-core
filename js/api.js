@@ -105,7 +105,7 @@ function qspOnBeforeScrollEnd(e)
 	if (this.moved)
 	{
 		var point = this.hasTouch ? e.changedTouches[0] : e;
-		gcb_clickBuster(point);
+		gcb_ignoreClick(point.clientX, point.clientY);
 	}
 }
 
@@ -1088,7 +1088,11 @@ function qspSetPressableButtons()
     var hasTouch = 'ontouchstart' in window && !isTouchPad;
 	
 	// Убиваем лишние клики
-	document.addEventListener('click', gcb_clickBuster, true);
+	if (hasTouch) {
+		document.addEventListener('click', gcb_clickBuster, true);
+	} else {
+		document.addEventListener('click', gcb_clickBusterNoTouch, true);
+	}
 	
 	var START_EV = hasTouch ? 'touchstart' : 'mousedown';
 	var END_EV = hasTouch ? 'touchend touchcancel' : 'mouseup dragend';
