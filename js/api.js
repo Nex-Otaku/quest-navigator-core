@@ -1069,8 +1069,8 @@ function qspSetDialogs()
 	
 	//INPUT
 	$('#qsp-dialog-input').hide();
-    $('#qsp-dialog-input-text').keydown(function() {
-        if (event.keyCode == 13) {
+    $('#qsp-dialog-input-text').keyup(function(event) {
+        if ((event.which === 13) || (event.keyCode === 13)) {
             $('#qsp-button-input-ok').trigger('click');
             return false;
          }
