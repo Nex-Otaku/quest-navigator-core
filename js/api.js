@@ -1,4 +1,4 @@
-var qsp_iScroll_main = null;//test repo
+var qsp_iScroll_main = null;
 var qsp_iScroll_acts = null;
 var qsp_iScroll_vars = null;
 var qsp_iScroll_objs = null;
