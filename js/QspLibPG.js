@@ -149,9 +149,13 @@ function onPhoneGapDeviceReady() {
 		// По кнопке MENU вызываем диалог системного меню
 		document.addEventListener("menubutton", qspShowSystemMenu, false);
 	}
-	// Вызывается, когда мы узнали, на каком устройстве запущена игра
-	if (typeof(qspSkinOnDeviceSet) === 'function')
-		qspSkinOnDeviceSet();
+
+	// Сообщаем API, что нам стал известен тип устройства.
+	qspSetDevice();
 
 	qspInitNext();
+}
+
+function qspLibOnInitApi() {
+	document.addEventListener("deviceready", onPhoneGapDeviceReady, false);
 }

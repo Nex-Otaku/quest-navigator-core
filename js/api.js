@@ -17,6 +17,7 @@ var qspSplashHidden = false;
 var qspPreloadingImageArray = [];
 var qspIsAndroid = false;
 var qspIsIos = false;
+var qspIsDesktop = false;
 var qspScreenHD = false;
 
 var qspHandlerViewClick = function() { qspCloseView(); };
@@ -61,17 +62,9 @@ function qspInitApi() {
     if (typeof(qspLibMode) === "undefined")
         alert("Не подключена библиотека QspLibXXX.js!");
     
-    //PG
-    if (qspLibMode === "PHONEGAP")
-	{
-        document.addEventListener("deviceready", onPhoneGapDeviceReady, false);
-	}
-	else
-	{
-		// Вызывается, когда мы узнали, на каком устройстве запущена игра
-		if (typeof(qspSkinOnDeviceSet) === 'function')
-			qspSkinOnDeviceSet();
-	}
+	// Library callback
+	if (typeof(qspLibOnInitApi) === 'function')
+		qspLibOnInitApi();
 		
 	// Fallback to JQuery "animate" if no CSS3 transition support
 	if (!$.support.transition)
@@ -1251,4 +1244,10 @@ function qspDetectScreenHD()
 		// Добавляем класс "retina" к BODY
 		$(document.body).addClass('retina');
 	}
+}
+
+function qspSetDevice() {
+	// Вызывается, когда мы узнали, на каком устройстве запущена игра
+	if (typeof(qspSkinOnDeviceSet) === 'function')
+		qspSkinOnDeviceSet();
 }
