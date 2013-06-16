@@ -239,8 +239,6 @@ function qspSetActsContent(acts, under_desc)
 	if (acts)
 	{
         for (i = 0; i < acts.length; i++) {
-			//Для мобильной версии отключим, иначе слишком тормозит
-			/*   " onmouseover='javascript:qspSelectAction(\"" + i + "\");' " + */
 			$("#qsp-acts").append("<div class='qsp-action qsp-skin-button'><a " + 
 			" onclick='javascript:qspExecuteAction(\"" + i + "\");'>" + 
                                   qspApplyTemplateForTextAndImage(qspGameSkin.actsListItemFormat, acts[i].desc, acts[i].image) + 
@@ -303,8 +301,6 @@ function qspFillInvWithObjs()
 	{
 		for (i = 0; i < qspInvObjs.length; i++) {
             var selected = i == qspSelectedObjectIndex;
-			//пока не сделано, но сделать обязательно
-			/*   " onmouseover='javascript:qspSelectAction(\"" + i + "\");' " + */
 			$("#qsp-inv").append("<div class='qsp-object'>" +
                                  (selected ? "" : ("<a style=\"cursor: pointer;\" onclick='javascript:qspSelectObject(\"" + i + "\");'>")) +
                                  qspApplyTemplateForTextAndImage(selected ? qspGameSkin.objsListSelItemFormat : qspGameSkin.objsListItemFormat, 
@@ -714,8 +710,6 @@ function qspShowSaveSlotsDialog(content)
 		var empty = slots[i] == "-empty-";
 		var active = !qspSaveSlotsModeOpen || !empty;
 		var slotName = empty ? "Слот " + (i + 1) + " (пусто)" : "Слот " + slots[i];
-		//сделать какую-нибудь подсветку в будущем 
-		/*   " onmouseover='javascript:qspSelectAction(" + i + ");' " + */
 		var div = "<div class='qsp-save-slot-" + (active ? "enabled" : "disabled") + " qsp-skin-button'>" + 
 						(active ? "<a onclick='javascript:qspCloseSaveSlots(" + (i + 1) + ");'>" : "") + 
    						"<div>" + slotName + "</div>" +
@@ -889,14 +883,6 @@ function qspView(path)
 
 
 // Вызовы JS -> AS3
-
-function qspSelectAction(index)
-{
-	//Навели курсор на действие (в мобильной версии отключено)
-	if (qspDialogOpened || qspUiBlocked)
-		return;
-    QspLib.selectAction(index);
-}
 
 function qspExecuteAction(index)
 {
