@@ -176,526 +176,6 @@ function qspSetGroupedContent(content)
     }
 }
 
-function qspSetMainContent(content, initial) 
-{
-	if (initial)
-	{
-		qspMainViewWasScrolled = false;
-		qspMainContent = content;
-	}
-	
-	$("#qsp-main").empty();
-    content = qspApplyTemplateForText(qspGameSkin.mainDescTextFormat, content);
-    $("#qsp-main").append(content);
-	$("#qsp-main").imagesLoaded().always(qspRefreshMainScroll);
-} 
-
-function qspRefreshMainScroll()
-{
-	if (qsp_iScroll_main != null)
-		setTimeout(function () {
-            // Skin callback
-            if (typeof(qspSkinOnMainScrollRefresh) == 'function')
-                qspSkinOnMainScrollRefresh();
-			qsp_iScroll_main.refresh();
-			if ((qspGameSkin != null) && (qspGameSkin.disableScroll == 0) && !qspMainViewWasScrolled)
-            {
-				qspMainViewWasScrolled = true;
-				qsp_iScroll_main.scrollTo(0, 0, 0, false);
-            }
-            // Skin callback
-            if (typeof(qspSkinOnMainScrollRefreshed) == 'function')
-                qspSkinOnMainScrollRefreshed();
-		}, 0);
-}
-
-function qspSetVarsContent(content) 
-{
-    var content_vars = qspApplyTemplateForText(qspGameSkin.varsDescTextFormat, content);
-	$("#qsp-vars").empty();
-	$("#qsp-vars").append(content_vars);
-	$("#qsp-vars").imagesLoaded().always(qspRefreshVarsScroll);
-} 
-
-function qspRefreshVarsScroll()
-{
-	if (qsp_iScroll_vars != null)
-		setTimeout(function () {
-            // Skin callback
-            if (typeof(qspSkinOnVarsScrollRefresh) == 'function')
-                qspSkinOnVarsScrollRefresh();
-			qsp_iScroll_vars.refresh();
-			if ((qspGameSkin != null) && (qspGameSkin.disableScroll == 0))
-				qsp_iScroll_vars.scrollTo(0, 0, 0, false);
-            // Skin callback
-            if (typeof(qspSkinOnVarsScrollRefreshed) == 'function')
-                qspSkinOnVarsScrollRefreshed();
-		}, 0);
-}
-
-function qspSetActsContent(acts, under_desc) 
-{
-	$("#qsp-acts").empty();
-	if (acts)
-	{
-        for (i = 0; i < acts.length; i++) {
-			$("#qsp-acts").append("<div class='qsp-action qsp-skin-button'><a " + 
-			" onclick='javascript:qspExecuteAction(\"" + i + "\");'>" + 
-                                  qspApplyTemplateForTextAndImage(qspGameSkin.actsListItemFormat, acts[i].desc, acts[i].image) + 
-                                  "</a></div>");
-		}
-	}
-
-	$("#qsp-acts").imagesLoaded().always(qspRefreshMainScroll);
-} 
-
-function qspRefreshActsScroll()
-{
-	if (qsp_iScroll_acts != null)
-		setTimeout(function () {
-            // Skin callback
-            if (typeof(qspSkinOnActsScrollRefresh) == 'function')
-                qspSkinOnActsScrollRefresh();
-			qsp_iScroll_acts.refresh();
-			if ((qspGameSkin != null) && (qspGameSkin.disableScroll == 0))
-				qsp_iScroll_acts.scrollTo(0, 0, 0, false);
-            // Skin callback
-            if (typeof(qspSkinOnActsScrollRefreshed) == 'function')
-                qspSkinOnActsScrollRefreshed();
-		}, 0);
-}
-
-function qspSetInvContent(objs) 
-{
-    qspSelectedObjectIndex = -1;
-    qspInvObjs = objs;
-	if (objs)
-	{
-		for (i = 0; i < objs.length; i++) {
-            if (objs[i].selected == 1)
-                qspSelectedObjectIndex = i;
-		}
-        qspFillInvWithObjs();
-	}
-	$("#qsp-inv").imagesLoaded().always(qspRefreshObjsScroll);
-}
-
-function qspRefreshObjsScroll()
-{
-	if (qsp_iScroll_objs != null)
-		setTimeout(function () {
-            // Skin callback
-            if (typeof(qspSkinOnObjsScrollRefresh) == 'function')
-                qspSkinOnObjsScrollRefresh();
-			qsp_iScroll_objs.refresh();
-            // Skin callback
-            if (typeof(qspSkinOnObjsScrollRefreshed) == 'function')
-                qspSkinOnObjsScrollRefreshed();
-		}, 0);
-}
-
-function qspFillInvWithObjs()
-{
-	$("#qsp-inv").empty();
-	if (qspInvObjs)
-	{
-		for (i = 0; i < qspInvObjs.length; i++) {
-            var selected = i == qspSelectedObjectIndex;
-			$("#qsp-inv").append("<div class='qsp-object'>" +
-                                 (selected ? "" : ("<a style=\"cursor: pointer;\" onclick='javascript:qspSelectObject(\"" + i + "\");'>")) +
-                                 qspApplyTemplateForTextAndImage(selected ? qspGameSkin.objsListSelItemFormat : qspGameSkin.objsListItemFormat, 
-                                                              qspInvObjs[i].desc, qspInvObjs[i].image) + 
-                                 (selected ? "" : "</a>") +
-                                 "</div>");
-		}
-		qspLoadRetinaImages('#qsp-inv img');
-	}
-	// Skin callback
-	if (typeof(qspSkinOnFillInvWithObjs) == 'function')
-		qspSkinOnFillInvWithObjs();
-}
-
-function qspExecJS(cmd) 
-{
-	// Выполняем яваскрипт, переданный из игры командой EXEC('JS:...')
-	cmd = '<script>' + cmd + '</script>';
-	$('#qsp-js-sandbox').html(cmd);
-}
-
-function qspUpdateSkin(skin)
-{
-	//Устанавливаем переменные оформления
-	qspGameSkin = skin;
-	/*
-	jsSkin.useHtml = useHtml;
-	jsSkin.disableScroll = disableScroll;
-	jsSkin.upArrowImagePath = upArrowImagePath;
-	jsSkin.downArrowImagePath = downArrowImagePath;
-	jsSkin.mainBackImagePath = mainBackImagePath;
-	jsSkin.mainTopImagePath = mainTopImagePath;
-    jsSkin.sysMenuButtonImagePath = sysMenuButtonImagePath;
-    jsSkin.sysMenuButtonX = sysMenuButtonX;
-    jsSkin.sysMenuButtonY = sysMenuButtonY;
-	jsSkin.backColor = backColor;
-	jsSkin.linkColor = linkColor;
-	jsSkin.fontColor = fontColor;
-	jsSkin.fontName = fontName;
-	jsSkin.fontSize = fontSize;
-	jsSkin.styleSheet = styleSheet;
-	jsSkin.disableShade = disableShade;
-	jsSkin.scrollSpeed = scrollSpeed;
-	jsSkin.hideScrollArrows = hideScrollArrows;
-	jsSkin.disableAutoRef = disableAutoRef;
-	*/
-
-	/*
-	if (!$("#qsp-back-image").hasClass("protected"))
-	{
-		$("#qsp-back-image").empty();
-		if (qspGameSkin.mainBackImagePath.length > 0)
-		{
-			$("#qsp-back-image").append("<img src=\"" + qspGameSkin.mainBackImagePath + "\" >");
-		}
-	}*/
-		
-	/* Непонятно, как эту штуку делать
-	$("#qsp-top-image").empty();
-	if (qspGameSkin.mainTopImagePath.length > 0)
-		$("#qsp-top-image").append("<img src=\"" + qspGameSkin.mainTopImagePath + "\">");
-	*/
-
-	/*
-	if (!$("#qsp-system-menu-button").hasClass("protected"))
-	{
-		if (qspGameSkin.sysMenuButtonImagePath.length > 0)
-		{
-			$('#qsp-system-menu-button').empty();
-			$("#qsp-system-menu-button").append("<a onclick=\"javascript:qspShowSystemMenu();\" style=\"cursor: pointer;\">" +
-												"<img src=\"" + qspGameSkin.sysMenuButtonImagePath + "\">" +
-												"</a>");
-			$("#qsp-system-menu-button").css("left", qspGameSkin.sysMenuButtonX).css("top", qspGameSkin.sysMenuButtonY);
-			$('#qsp-system-menu-button').show();
-		}
-		else
-		{
-			$('#qsp-system-menu-button').hide();
-		}
-	}*/
-    
-	$(document.body).css("backgroundColor", qspGameSkin.backColor);
-
-	//$(document.body).attr("bgcolor", qspGameSkin.backColor); - можно и так
-	$(".qsp-skin-dialog").css("backgroundColor", qspGameSkin.backColor);
-	$(".qsp-skin-dialog").css("border-width", qspGameSkin.menuBorder).css("border-color", qspGameSkin.menuBorderColor).css("border-style", "solid");
-	
-	$(document.body).attr("link", qspGameSkin.linkColor);
-	
-	//$(document.body).attr("text", qspGameSkin.fontColor);
-	$(document.body).css("color", qspGameSkin.fontColor);
-	
-	$(document.body).css("font-family", qspGameSkin.fontName);
-	
-	$(document.body).css("font-size", qspGameSkin.fontSize);
-    
-
-	
-	/*
-	// ----------------------
-	jsSkin.newLocEffect = newLocEffect;
-	jsSkin.newLocEffectTime = newLocEffectTime;
-	jsSkin.newLocEffectSeq = newLocEffectSeq;
-	jsSkin.viewEffect = viewEffect;
-	jsSkin.viewEffectTime = viewEffectTime;
-	jsSkin.inputEffect = inputEffect;
-	jsSkin.inputEffectTime = inputEffectTime;
-	jsSkin.msgEffect = msgEffect;
-	jsSkin.msgEffectTime = msgEffectTime;
-	jsSkin.menuEffect = menuEffect;
-	jsSkin.menuEffectTime = menuEffectTime;
-	// ----------------------
-	jsSkin.mainDescTextFormat = mainDescTextFormat;
-	убрано - jsSkin.mainDescIntegratedActions = mainDescIntegratedActions;
-	jsSkin.mainDescBackImagePath = mainDescBackImagePath;
-	jsSkin.mainDescX = mainDescX;
-	jsSkin.mainDescY = mainDescY;
-	jsSkin.mainDescW = mainDescW;
-	jsSkin.mainDescH = mainDescH;
-	*/
-
-	/*
-	if (!$("#qsp-wrapper-main").hasClass("protected"))
-	{
-		$("#qsp-wrapper-main").css("left", qspGameSkin.mainDescX).css("top", qspGameSkin.mainDescY)
-			.css("width", qspGameSkin.mainDescW).css("height", qspGameSkin.mainDescH).css("background-image", "url(" + qspGameSkin.mainDescBackImagePath + ")");
-	}*/
-			
-	/*
-	// ----------------------
-	jsSkin.varsDescTextFormat = varsDescTextFormat;
-	jsSkin.varsDescBackImagePath = varsDescBackImagePath;
-	jsSkin.varsDescX = varsDescX;
-	jsSkin.varsDescY = varsDescY;
-	jsSkin.varsDescW = varsDescW;
-	jsSkin.varsDescH = varsDescH;
-	*/
-
-	/*
-	if (!$("#qsp-wrapper-vars").hasClass("protected"))
-	{
-		$("#qsp-wrapper-vars").css("left", qspGameSkin.varsDescX).css("top", qspGameSkin.varsDescY)
-			.css("width", qspGameSkin.varsDescW).css("height", qspGameSkin.varsDescH).css("background-image", "url(" + qspGameSkin.varsDescBackImagePath + ")");
-	}*/
-
-	/*
-	// ----------------------
-	jsSkin.actsListItemFormat = actsListItemFormat;
-	jsSkin.actsListSelItemFormat = actsListSelItemFormat;
-	jsSkin.actsListBackImagePath = actsListBackImagePath;
-	jsSkin.actsListX = actsListX;
-	jsSkin.actsListY = actsListY;
-	jsSkin.actsListW = actsListW;
-	jsSkin.actsListH = actsListH;
-	*/
-
-	/*
-	if (!$("#qsp-wrapper-acts").hasClass("protected"))
-	{
-		//Само собой, менять позицию этого дива мы можем только если действия расположены отдельно от основного окна описания
-		$("#qsp-wrapper-acts").css("left", qspGameSkin.actsListX).css("top", qspGameSkin.actsListY)
-			.css("width", qspGameSkin.actsListW).css("height", qspGameSkin.actsListH).css("background-image", "url(" + qspGameSkin.actsListBackImagePath + ")");
-	}*/
-
-	/*
-	// ----------------------
-	jsSkin.objsListItemFormat = objsListItemFormat;
-	jsSkin.objsListSelItemFormat = objsListSelItemFormat;
-	jsSkin.objsListBackImagePath = objsListBackImagePath;
-	jsSkin.objsListX = objsListX;
-	jsSkin.objsListY = objsListY;
-	jsSkin.objsListW = objsListW;
-	jsSkin.objsListH = objsListH;
-	*/
-
-	/*
-	if (!$("#qsp-wrapper-objs").hasClass("protected"))
-	{
-		$("#qsp-wrapper-objs").css("left", qspGameSkin.objsListX).css("top", qspGameSkin.objsListY)
-			.css("width", qspGameSkin.objsListW).css("height", qspGameSkin.objsListH).css("background-image", "url(" + qspGameSkin.objsListBackImagePath + ")");
-	}*/
-			
-	/*
-	// ----------------------
-	jsSkin.viewAlwaysShow = viewAlwaysShow;
-	jsSkin.viewX = viewX;
-	jsSkin.viewY = viewY;
-	jsSkin.viewW = viewW;
-	jsSkin.viewH = viewH;
-	*/
-
-	/*
-	if (!$("#qsp-dialog-view").hasClass("protected"))
-	{
-		$("#qsp-dialog-view-image-container").css("left", qspGameSkin.viewX).css("top", qspGameSkin.viewY)
-			.css("width", qspGameSkin.viewW).css("height", qspGameSkin.viewH);
-	}*/
-	// Если выставлен флаг viewAlwaysShow, то мы не рисуем оверлей
-	if (qspGameSkin.viewAlwaysShow == 1)
-		$("#qsp-dialog-view .qsp-skin-overlay").hide();
-	else
-		$("#qsp-dialog-view .qsp-skin-overlay").show();
-		
-	/*
-	строка ввода
-	// ----------------------
-	jsSkin.userInputX = userInputX;
-	jsSkin.userInputY = userInputY;
-	jsSkin.userInputW = userInputW;
-	jsSkin.userInputH = userInputH;
-	*/
-
-	//$("#qsp-input-line").css("left", qspGameSkin.userInputX).css("top", qspGameSkin.userInputY)
-	//	.css("width", qspGameSkin.userInputW).css("height", qspGameSkin.userInputH);
-	
-	/*
-	// ----------------------
-	jsSkin.inputBackImagePath = inputBackImagePath;
-	jsSkin.inputX = inputX;
-	jsSkin.inputY = inputY;
-	jsSkin.inputTextFormat = inputTextFormat;
-	jsSkin.inputTextX = inputTextX;
-	jsSkin.inputTextY = inputTextY;
-	jsSkin.inputTextW = inputTextW;
-	jsSkin.inputTextH = inputTextH;
-	jsSkin.inputBarX = inputBarX;
-	jsSkin.inputBarY = inputBarY;
-	jsSkin.inputBarW = inputBarW;
-	jsSkin.inputBarH = inputBarH;
-	jsSkin.inputOkImagePath = inputOkImagePath;
-	jsSkin.inputOkX = inputOkX;
-	jsSkin.inputOkY = inputOkY;
-	jsSkin.inputCancelImagePath = inputCancelImagePath;
-	jsSkin.inputCancelX = inputCancelX;
-	jsSkin.inputCancelY = inputCancelY;
-	*/
-	// Если задан класс "protected", значит внешний вид диалога полностью определяется кастомным CSS
-	// Иначе мы задаем фиксированные координаты из игры
-	/*
-	if (!$("#qsp-dialog-input").hasClass("protected"))
-	{
-		// Cancel не рисуем
-		$("#qsp-dialog-input-background").empty();
-		if (qspGameSkin.inputBackImagePath.length > 0)
-		{
-			$("#qsp-dialog-input-background").append("<img src=\"" + qspGameSkin.inputBackImagePath + "\">");
-		}
-		
-		$("#qsp-dialog-input-background").css("left", qspGameSkin.inputX).css("top", qspGameSkin.inputY);
-		//Приглашение
-		$("#qsp-dialog-input-content").css("left", qspGameSkin.inputX + qspGameSkin.inputTextX)
-									.css("top", qspGameSkin.inputY + qspGameSkin.inputTextY)
-									.css("width", qspGameSkin.inputTextW).css("height", qspGameSkin.inputTextH);
-		//Поле ввода
-		$("#qsp-dialog-input-text").css("left", qspGameSkin.inputX + qspGameSkin.inputBarX)
-									.css("top", qspGameSkin.inputY + qspGameSkin.inputBarY)
-									.css("width", qspGameSkin.inputBarW).css("height", qspGameSkin.inputBarH);
-		if (qspGameSkin.inputOkImagePath.length > 0)
-		{
-			$("#qsp-button-input-ok").empty();
-			$("#qsp-button-input-ok").append("<img src=\"" + qspGameSkin.inputOkImagePath + "\">");
-		}
-		$("#qsp-button-input-ok").css("left", qspGameSkin.inputX + qspGameSkin.inputOkX).css("top", qspGameSkin.inputY + qspGameSkin.inputOkY);
-	}
-	*/
-	/*
-	// ----------------------
-	jsSkin.menuFixedSize = menuFixedSize;
-	jsSkin.menuBorder = menuBorder;
-	jsSkin.menuBorderColor = menuBorderColor;
-	jsSkin.menuPadding = menuPadding;
-	jsSkin.menuBackImagePath = menuBackImagePath;
-	jsSkin.menuX = menuX;
-	jsSkin.menuY = menuY;
-	jsSkin.menuListItemFormat = menuListItemFormat;
-	jsSkin.menuListSelItemFormat = menuListSelItemFormat;
-	jsSkin.menuListX = menuListX;
-	jsSkin.menuListY = menuListY;
-	jsSkin.menuListW = menuListW;
-	jsSkin.menuListH = menuListH;
-	*/
-	
-	/*
-	if (!$("#qsp-dialog-user-menu").hasClass("protected"))
-	{
-		$("#qsp-dialog-user-menu").css("width", qspGameSkin.menuListW).css("padding", qspGameSkin.menuPadding)
-			.css("border-width", qspGameSkin.menuBorder).css("border-color", qspGameSkin.menuBorderColor).css("border-style", "solid")
-			.css("width", qspGameSkin.menuListW).css("backgroundColor", qspGameSkin.backColor);
-	}
-	*/
-	
-	/*
-	// ----------------------
-	jsSkin.msgBackImagePath = msgBackImagePath;
-	jsSkin.msgX = msgX;
-	jsSkin.msgY = msgY;
-	jsSkin.msgTextFormat = msgTextFormat;
-	jsSkin.msgTextX = msgTextX;
-	jsSkin.msgTextY = msgTextY;
-	jsSkin.msgTextW = msgTextW;
-	jsSkin.msgTextH = msgTextH;
-	jsSkin.msgOkImagePath = msgOkImagePath;
-	jsSkin.msgOkX = msgOkX;
-	jsSkin.msgOkY = msgOkY;
-	*/
-	/*
-	if (!$("#qsp-dialog-msg").hasClass("protected"))
-	{
-		$("#qsp-dialog-msg-background").empty();
-		if (qspGameSkin.msgBackImagePath.length > 0)
-			$("#qsp-dialog-msg-background").append("<img src=\"" + qspGameSkin.msgBackImagePath + "\">");
-		$("#qsp-dialog-msg-background").css("left", qspGameSkin.msgX).css("top", qspGameSkin.msgY);
-		$("#qsp-wrapper-msg").css("left", qspGameSkin.msgX + qspGameSkin.msgTextX).css("top", qspGameSkin.msgY + qspGameSkin.msgTextY)
-			 .css("width", qspGameSkin.msgTextW).css("height", qspGameSkin.msgTextH);
-		if (qspGameSkin.msgOkImagePath.length > 0)
-		{
-			$("#qsp-button-msg-ok").empty();
-			$("#qsp-button-msg-ok").append("<img src=\"" + qspGameSkin.msgOkImagePath + "\">");
-		}
-		$("#qsp-button-msg-ok").css("left", qspGameSkin.msgX + qspGameSkin.msgOkX).css("top", qspGameSkin.msgY + qspGameSkin.msgOkY);
-	}
-    
-    // Для диалога ошибки применяем в точности те же настройки, что и для MSG.
-    // Нам приходится это делать, т.к. для диалога ошибки настроек не предусмотрено.
-	if (!$("#qsp-dialog-msg").hasClass("protected"))
-	{
-		$("#qsp-dialog-error-background").empty();
-		if (qspGameSkin.msgBackImagePath.length > 0)
-			$("#qsp-dialog-error-background").append("<img src=\"" + qspGameSkin.msgBackImagePath + "\">");
-		$("#qsp-dialog-error-background").css("left", qspGameSkin.msgX).css("top", qspGameSkin.msgY);
-		$("#qsp-dialog-error-content").css("left", qspGameSkin.msgX + qspGameSkin.msgTextX).css("top", qspGameSkin.msgY + qspGameSkin.msgTextY)
-		.css("width", qspGameSkin.msgTextW).css("height", qspGameSkin.msgTextH);
-		if (qspGameSkin.msgOkImagePath.length > 0)
-		{
-			$("#qsp-button-error-ok").empty();
-			$("#qsp-button-error-ok").append("<img src=\"" + qspGameSkin.msgOkImagePath + "\">");
-		}
-		$("#qsp-button-error-ok").css("left", qspGameSkin.msgX + qspGameSkin.msgOkX).css("top", qspGameSkin.msgY + qspGameSkin.msgOkY);
-	}
-	*/
-
-	//STUB
-	//Потом сделать установку координат системного меню через игру
-//	$("#qsp-dialog-system-menu-container").css("left", 292).css("top", 151)
-//											.css("width", 356).css("height", 338);
-//	$("#qsp-dialog-system-menu-background").css("left", 292).css("top", 151);
-
-	//STUB
-	//Потом сделать установку координат дилога загрузки/сохранения через игру
-//	$("#qsp-dialog-save-slots-container").css("left", 292).css("top", 151)
-//											.css("width", 356).css("height", 338);
-
-	//Показываем либо скрываем окно действий
-	if ($('#qsp-wrapper-acts').length) {
-		if (qspGameSkin.showActs == 1) {
-			$('#qsp-wrapper-acts').show();
-		} else {
-			$('#qsp-wrapper-acts').hide();
-		}
-	} else {
-		if (qspGameSkin.showActs == 1) {
-			$('#qsp-acts').show();
-		} else {
-			$('#qsp-acts').hide();
-		}
-	}
-	//Показываем либо скрываем окно инвентаря
-	if (qspGameSkin.showObjs == 1)
-		$("#qsp-wrapper-objs").show();
-	else
-		$("#qsp-wrapper-objs").hide();
-	//Показываем либо скрываем окно дополнительного описания
-	if (qspGameSkin.showVars == 1)
-		$("#qsp-wrapper-vars").show();
-	else
-		$("#qsp-wrapper-vars").hide();
- 	//Показываем либо скрываем строку ввода(не реализовано)
-	/*
-     if (show)
-     $("#qsp-input-line").show();
-     else
-     $("#qsp-input-line").hide();
-     */
-
-	// Skin callback
-	if (typeof(qspSkinOnUpdateSkin) == 'function')
-		qspSkinOnUpdateSkin();
-}
-
-function qspBlockUi(block)
-{
-	//Блокируем или разблокируем интерфейс
-	qspUiBlocked = block;
-}
-
 function qspShowSaveSlotsDialog(content)
 {
     // parameter type: JSON Object
@@ -881,8 +361,225 @@ function qspView(path)
 	}
 }
 
+// На будущее
 
-// Вызовы JS -> AS3
+function qspBlockUi(block)
+{
+	//Блокируем или разблокируем интерфейс
+	qspUiBlocked = block;
+}
+
+
+// Вспомогательные функции
+
+function qspSetMainContent(content, initial) 
+{
+	if (initial)
+	{
+		qspMainViewWasScrolled = false;
+		qspMainContent = content;
+	}
+	
+	$("#qsp-main").empty();
+    content = qspApplyTemplateForText(qspGameSkin.mainDescTextFormat, content);
+    $("#qsp-main").append(content);
+	$("#qsp-main").imagesLoaded().always(qspRefreshMainScroll);
+} 
+
+function qspRefreshMainScroll()
+{
+	if (qsp_iScroll_main != null)
+		setTimeout(function () {
+            // Skin callback
+            if (typeof(qspSkinOnMainScrollRefresh) == 'function')
+                qspSkinOnMainScrollRefresh();
+			qsp_iScroll_main.refresh();
+			if ((qspGameSkin != null) && (qspGameSkin.disableScroll == 0) && !qspMainViewWasScrolled)
+            {
+				qspMainViewWasScrolled = true;
+				qsp_iScroll_main.scrollTo(0, 0, 0, false);
+            }
+            // Skin callback
+            if (typeof(qspSkinOnMainScrollRefreshed) == 'function')
+                qspSkinOnMainScrollRefreshed();
+		}, 0);
+}
+
+function qspSetVarsContent(content) 
+{
+    var content_vars = qspApplyTemplateForText(qspGameSkin.varsDescTextFormat, content);
+	$("#qsp-vars").empty();
+	$("#qsp-vars").append(content_vars);
+	$("#qsp-vars").imagesLoaded().always(qspRefreshVarsScroll);
+} 
+
+function qspRefreshVarsScroll()
+{
+	if (qsp_iScroll_vars != null)
+		setTimeout(function () {
+            // Skin callback
+            if (typeof(qspSkinOnVarsScrollRefresh) == 'function')
+                qspSkinOnVarsScrollRefresh();
+			qsp_iScroll_vars.refresh();
+			if ((qspGameSkin != null) && (qspGameSkin.disableScroll == 0))
+				qsp_iScroll_vars.scrollTo(0, 0, 0, false);
+            // Skin callback
+            if (typeof(qspSkinOnVarsScrollRefreshed) == 'function')
+                qspSkinOnVarsScrollRefreshed();
+		}, 0);
+}
+
+function qspSetActsContent(acts, under_desc) 
+{
+	$("#qsp-acts").empty();
+	if (acts)
+	{
+        for (i = 0; i < acts.length; i++) {
+			$("#qsp-acts").append("<div class='qsp-action qsp-skin-button'><a " + 
+			" onclick='javascript:qspExecuteAction(\"" + i + "\");'>" + 
+                                  qspApplyTemplateForTextAndImage(qspGameSkin.actsListItemFormat, acts[i].desc, acts[i].image) + 
+                                  "</a></div>");
+		}
+	}
+
+	$("#qsp-acts").imagesLoaded().always(qspRefreshMainScroll);
+} 
+
+function qspRefreshActsScroll()
+{
+	if (qsp_iScroll_acts != null)
+		setTimeout(function () {
+            // Skin callback
+            if (typeof(qspSkinOnActsScrollRefresh) == 'function')
+                qspSkinOnActsScrollRefresh();
+			qsp_iScroll_acts.refresh();
+			if ((qspGameSkin != null) && (qspGameSkin.disableScroll == 0))
+				qsp_iScroll_acts.scrollTo(0, 0, 0, false);
+            // Skin callback
+            if (typeof(qspSkinOnActsScrollRefreshed) == 'function')
+                qspSkinOnActsScrollRefreshed();
+		}, 0);
+}
+
+function qspSetInvContent(objs) 
+{
+    qspSelectedObjectIndex = -1;
+    qspInvObjs = objs;
+	if (objs)
+	{
+		for (i = 0; i < objs.length; i++) {
+            if (objs[i].selected == 1)
+                qspSelectedObjectIndex = i;
+		}
+        qspFillInvWithObjs();
+	}
+	$("#qsp-inv").imagesLoaded().always(qspRefreshObjsScroll);
+}
+
+function qspRefreshObjsScroll()
+{
+	if (qsp_iScroll_objs != null)
+		setTimeout(function () {
+            // Skin callback
+            if (typeof(qspSkinOnObjsScrollRefresh) == 'function')
+                qspSkinOnObjsScrollRefresh();
+			qsp_iScroll_objs.refresh();
+            // Skin callback
+            if (typeof(qspSkinOnObjsScrollRefreshed) == 'function')
+                qspSkinOnObjsScrollRefreshed();
+		}, 0);
+}
+
+function qspFillInvWithObjs()
+{
+	$("#qsp-inv").empty();
+	if (qspInvObjs)
+	{
+		for (i = 0; i < qspInvObjs.length; i++) {
+            var selected = i == qspSelectedObjectIndex;
+			$("#qsp-inv").append("<div class='qsp-object'>" +
+                                 (selected ? "" : ("<a style=\"cursor: pointer;\" onclick='javascript:qspSelectObject(\"" + i + "\");'>")) +
+                                 qspApplyTemplateForTextAndImage(selected ? qspGameSkin.objsListSelItemFormat : qspGameSkin.objsListItemFormat, 
+                                                              qspInvObjs[i].desc, qspInvObjs[i].image) + 
+                                 (selected ? "" : "</a>") +
+                                 "</div>");
+		}
+		qspLoadRetinaImages('#qsp-inv img');
+	}
+	// Skin callback
+	if (typeof(qspSkinOnFillInvWithObjs) == 'function')
+		qspSkinOnFillInvWithObjs();
+}
+
+function qspExecJS(cmd) 
+{
+	// Выполняем яваскрипт, переданный из игры командой EXEC('JS:...')
+	cmd = '<script>' + cmd + '</script>';
+	$('#qsp-js-sandbox').html(cmd);
+}
+
+function qspUpdateSkin(skin)
+{
+	//Устанавливаем переменные оформления
+	qspGameSkin = skin;
+    
+	$(document.body).css("backgroundColor", qspGameSkin.backColor);
+
+	$(".qsp-skin-dialog").css("backgroundColor", qspGameSkin.backColor);
+	$(".qsp-skin-dialog").css("border-width", qspGameSkin.menuBorder).css("border-color", qspGameSkin.menuBorderColor).css("border-style", "solid");
+	
+	$(document.body).attr("link", qspGameSkin.linkColor);
+	
+	$(document.body).css("color", qspGameSkin.fontColor);
+	
+	$(document.body).css("font-family", qspGameSkin.fontName);
+	
+	$(document.body).css("font-size", qspGameSkin.fontSize);
+    
+	// Если выставлен флаг viewAlwaysShow, то мы не рисуем оверлей
+	if (qspGameSkin.viewAlwaysShow == 1)
+		$("#qsp-dialog-view .qsp-skin-overlay").hide();
+	else
+		$("#qsp-dialog-view .qsp-skin-overlay").show();
+		
+	//Показываем либо скрываем окно действий
+	if ($('#qsp-wrapper-acts').length) {
+		if (qspGameSkin.showActs == 1) {
+			$('#qsp-wrapper-acts').show();
+		} else {
+			$('#qsp-wrapper-acts').hide();
+		}
+	} else {
+		if (qspGameSkin.showActs == 1) {
+			$('#qsp-acts').show();
+		} else {
+			$('#qsp-acts').hide();
+		}
+	}
+	//Показываем либо скрываем окно инвентаря
+	if (qspGameSkin.showObjs == 1)
+		$("#qsp-wrapper-objs").show();
+	else
+		$("#qsp-wrapper-objs").hide();
+	//Показываем либо скрываем окно дополнительного описания
+	if (qspGameSkin.showVars == 1)
+		$("#qsp-wrapper-vars").show();
+	else
+		$("#qsp-wrapper-vars").hide();
+ 	//Показываем либо скрываем строку ввода(не реализовано)
+	/*
+     if (show)
+     $("#qsp-input-line").show();
+     else
+     $("#qsp-input-line").hide();
+     */
+
+	// Skin callback
+	if (typeof(qspSkinOnUpdateSkin) == 'function')
+		qspSkinOnUpdateSkin();
+}
+
+// Вызовы JS -> Native
 
 function qspExecuteAction(index)
 {
