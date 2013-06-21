@@ -11,31 +11,9 @@ var qspLibMode = "AWESOMIUM";       // "AIR", "PHONEGAP", "AWESOMIUM" - уста
 var QspLib = QspLibAwesomium;
 
 var oldLib = {
-
-/*    
-    registerJsCallback: function(callbackFunction, callbackName)
-    {
-        return cordova.exec(callbackFunction, null, "QspLibAwesomium", "registerJsCallback", [callbackName]);
-    },
-
-    initLib: function(onInited) {
-	
-        return cordova.exec(onInited, null, "QspLibAwesomium", "initLib", []);
-    },
-  */  
     restartGame: function() {
         return cordova.exec(null, null, "QspLibAwesomium", "restartGame", []);
     },
-
-/*    
-    version: function(types, success, fail) {
-      return cordova.exec(success, fail, "QspLibAwesomium", "version", types);
-    },
-*/
-/*    
-    selectAction: function(index) {
-        return cordova.exec(null, null, "QspLibAwesomium", "selectAction", [index]);
-    },*/
 
     executeAction: function(index) {
         return cordova.exec(null, null, "QspLibAwesomium", "executeAction", [index]);
@@ -76,60 +54,23 @@ var oldLib = {
 
     setMute: function(mute) {
         return cordova.exec(null, null, "QspLibAwesomium", "setMute", [mute]);
-    },
-	
-	// Для того, чтобы приложение на Андроиде не закрывать по кнопке BACK, а отправлять в фоновый режим
-	moveTaskToBackground: function() {
-		return cordova.exec(null, null, "QspLibAwesomium", "moveTaskToBackground", []);
-	}
+    }
 };
 
-var qspInitLevel = 0;
-
-function qspInitNext()
-{
-    setTimeout(function() {
-        qspInitLevel++;
-        if (qspInitLevel == 1)
-            QspLib.initLib(qspInitNext);
-        else if (qspInitLevel == 2)
-            QspLib.registerJsCallback(qspSetGroupedContent,		"qspSetGroupedContent");    //QspLib4
-        else if (qspInitLevel == 3)
-            QspLib.registerJsCallback(qspMsg,					"qspMsg");                  //QspLib5
-        else if (qspInitLevel == 4)
-            QspLib.registerJsCallback(qspView,                	"qspView");                 //QspLib6
-        else if (qspInitLevel == 5)
-            QspLib.registerJsCallback(qspInput,               	"qspInput");                //QspLib7
-        else if (qspInitLevel == 6)
-            QspLib.registerJsCallback(qspMenu,                	"qspMenu");                 //QspLib8
-        else if (qspInitLevel == 7)
-            QspLib.registerJsCallback(qspError,               	"qspError");                //QspLib9
-        else if (qspInitLevel == 8)
-            QspLib.registerJsCallback(qspShowSaveSlotsDialog,	"qspShowSaveSlotsDialog");  //QspLib10
-        else if (qspInitLevel == 9)
-            QspLib.restartGame();
-        else
-        {
-            // no more init
-        }
-    }, 0);
-}
 
 function onWebDeviceReady() {
 	qspIsDesktop = true;
 	// Сообщаем API, что нам стал известен тип устройства.
 	qspSetDevice();
-	QspLib.alert('ready');
-	//QspLib.SayHello();
-	//alert('hello said');
-	
-	//qspInitNext();
+	QspLib.restartGame();
+}
+
+function debug(str) {
+	$(document.body).append(str);
 }
 
 function qspLibOnInitApi() {
-alert('qspLibOnInitApi');
 	setTimeout( function() { // Delay for Mozilla
 			onWebDeviceReady();
 	}, 10);
-	alert('qspLibOnInitApi set');
 }

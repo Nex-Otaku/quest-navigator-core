@@ -284,6 +284,8 @@ function qspMenu(menu)
     var menuY = qspMouseY;
     if (qspGameSkin != null)
     {
+	/*
+	Сделать вызов колбэка шаблона для обработки координат.
         if (menuX + qspGameSkin.menuListW + 2*qspGameSkin.menuBorder + 2*qspGameSkin.menuPadding > $(window).width())
         {
             menuX = $(window).width() - qspGameSkin.menuListW - 2*qspGameSkin.menuBorder - 2*qspGameSkin.menuPadding;
@@ -292,6 +294,7 @@ function qspMenu(menu)
         {
             menuY = $(window).height() - $('#qsp-dialog-user-menu').height() - 2*qspGameSkin.menuBorder - 2*qspGameSkin.menuPadding;
         }
+		*/
     }
 
     
@@ -835,14 +838,6 @@ function qspApplyTemplateForTextAndImage(template, text, image)
     t = t.replace('%TEXT%', text);
     t = t.replace('%IMAGE%', image);
     return t;
-}
-
-function qspGetContentPath(path)
-{
-	// Уточняем путь к картинкам, если требуется
-	if (qspGameSkin == null)
-		return "";
-	return qspGameSkin.contentPath + path;
 }
 
 function qspMakeRetinaPath(path)
