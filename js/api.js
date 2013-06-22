@@ -529,7 +529,6 @@ function qspUpdateSkin(skin)
 	$(document.body).css("backgroundColor", qspGameSkin.backColor);
 
 	$(".qsp-skin-dialog").css("backgroundColor", qspGameSkin.backColor);
-	$(".qsp-skin-dialog").css("border-width", qspGameSkin.menuBorder).css("border-color", qspGameSkin.menuBorderColor).css("border-style", "solid");
 	
 	$(document.body).attr("link", qspGameSkin.linkColor);
 	
