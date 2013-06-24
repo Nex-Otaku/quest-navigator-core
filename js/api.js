@@ -366,14 +366,16 @@ function qspView(path)
 		{
 			qspDialogOpened = true;
 			qspCurDialog = 'view';
-			setTimeout( function() { // Delay for Mozilla
-					// Закрываем при любом клике
-					$(document).bind('click', qspHandlerViewClick);
-					// Обновляем центровку блока, если требуется
-					qspApplyScrollsVisibility();
-					// Показываем view
-					$('#qsp-dialog-view').css('visibility', 'visible');
-			}, 1);
+			$('#qsp-dialog-view-image-container').imagesLoaded().always(function() {
+				setTimeout( function() { // Delay for Mozilla
+						// Закрываем при любом клике
+						$(document).bind('click', qspHandlerViewClick);
+						// Обновляем центровку блока, если требуется
+						qspApplyScrollsVisibility();
+						// Показываем view
+						$('#qsp-dialog-view').css('visibility', 'visible');
+				}, 0);
+			});
 		}
 		else
 		{
