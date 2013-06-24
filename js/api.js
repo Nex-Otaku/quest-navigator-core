@@ -53,6 +53,15 @@ function qspInitApi() {
           });
 
 	qspSetPressableButtons();
+	
+	// Выравниваем по центру экрана все DIV'ы с классом qsp-center
+	$(window).resize(function(){
+		$('.qsp-center').css({
+			position:'absolute',
+			left: ($(window).width() - $('.qsp-center').outerWidth()) / 2,
+			top: ($(window).height() - $('.qsp-center').outerHeight()) / 2
+		});
+	});
 		  
 	$(document).bind("contextmenu", function(e) {
 		return false;
@@ -125,6 +134,9 @@ function qspApplyScrollsVisibility()
 		qspSetMainContent(qspMainContent, false);
 	
 	qspLoadRetinaImages('img');
+
+	// Заново выравниваем по центру экрана все изменившиеся блоки
+	$(window).resize();
 }
 
 function qspShowSystemMenu()
@@ -342,23 +354,31 @@ function qspView(path)
 	}
 	else
 	{
-		//Открываем VIEW
+		// Открываем VIEW
 		$('#qsp-dialog-view-image-container').empty();
 		$('#qsp-dialog-view-image-container').append('<img src="' + path + '">');
+		// Делаем диалог невидимым, чтобы он не дёргался при центровке
+		$('#qsp-dialog-view').css('visibility', 'hidden');
+		// Выводим его на экран (он всё ещё невидим, но теперь занимает место)
 		$('#qsp-dialog-view').show();
 		
 		if (qspGameSkin.viewAlwaysShow != 1)
 		{
 			qspDialogOpened = true;
 			qspCurDialog = 'view';
-			qspApplyScrollsVisibility();
-			//Закрываем при любом клике
 			setTimeout( function() { // Delay for Mozilla
+					// Закрываем при любом клике
 					$(document).bind('click', qspHandlerViewClick);
-			}, 0);
+					// Обновляем центровку блока, если требуется
+					qspApplyScrollsVisibility();
+					// Показываем view
+					$('#qsp-dialog-view').css('visibility', 'visible');
+			}, 1);
 		}
 		else
 		{
+			// Показываем view
+			$('#qsp-dialog-view').css('visibility', 'visible');
 			$('#qsp-dialog-view-image-container').imagesLoaded().always(qspRefreshMainScroll);
 		}
 	}
