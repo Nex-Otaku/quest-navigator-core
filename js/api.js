@@ -738,9 +738,6 @@ function qspSetDialogs()
 	
 	//SYSTEM MENU
 	$('#qsp-dialog-system-menu').hide();
-
-	//SYSTEM MENU BUTTON
-	$('#qsp-system-menu-button').hide();
 	
 	//SAVE SLOTS
 	$('#qsp-dialog-save-slots').hide();
