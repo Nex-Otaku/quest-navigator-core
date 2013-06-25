@@ -283,8 +283,6 @@ function qspMenu(menu)
 	$('#qsp-dialog-user-menu').empty();
 	for (i = 0; i < menu.length; i++)
 	{
-		//пока не сделано, но сделать обязательно
-		/*   " onmouseover='javascript:qspOverUserMenu(\"" + i + "\");' " + */
 		$('#qsp-dialog-user-menu').append("<div class='qsp-user-menu-item'><a href=\"#" + i + "\">" + 
                                           qspApplyTemplateForTextAndImage(qspGameSkin.menuListItemFormat, menu[i].desc, menu[i].image) + 
                                           "</a></div>");
