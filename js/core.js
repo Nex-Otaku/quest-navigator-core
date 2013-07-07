@@ -138,6 +138,7 @@ var m = Math,
 			zoomMax: 4,
 			doubleTapZoom: 2,
 			wheelAction: 'scroll',
+			wheelSpeed: 6,
 
 			// Snap
 			snap: false,
@@ -675,12 +676,12 @@ iScroll.prototype = {
 			deltaScale;
 
 		if ('wheelDeltaX' in e) {
-			wheelDeltaX = e.wheelDeltaX / 12;
-			wheelDeltaY = e.wheelDeltaY / 12;
+			wheelDeltaX = (e.wheelDeltaX * that.options.wheelSpeed) / 12;
+			wheelDeltaY = (e.wheelDeltaY * that.options.wheelSpeed) / 12;
 		} else if('wheelDelta' in e) {
-			wheelDeltaX = wheelDeltaY = e.wheelDelta / 12;
+			wheelDeltaX = wheelDeltaY = (e.wheelDelta * that.options.wheelSpeed) / 12;
 		} else if ('detail' in e) {
-			wheelDeltaX = wheelDeltaY = -e.detail * 3;
+			wheelDeltaX = wheelDeltaY = -e.detail * 3 * that.options.wheelSpeed;
 		} else {
 			return;
 		}
