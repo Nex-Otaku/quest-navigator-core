@@ -54,6 +54,20 @@ function qspInitApi() {
 
 	qspSetPressableButtons();
 	
+	// Обработчик строки ввода
+    $('#qsp-input-line input').keyup(function(event) {
+		var input = $(event.target);
+		var val = input.val();
+		if ($.data(input, 'saved_text') !== val) {
+			qspInputStringChange(val);
+		}
+        if ((event.which === 13) || (event.keyCode === 13)) {
+			qspInputStringEnter();
+            return false;
+		}
+    });
+	
+	
 	// Выравниваем по центру экрана все DIV'ы с классом qsp-center
 	$(window).resize(function(){
 		$('.qsp-center').css({
@@ -382,6 +396,11 @@ function qspView(path)
 			$('#qsp-dialog-view-image-container').imagesLoaded().always(qspRefreshMainScroll);
 		}
 	}
+}
+
+function qspSetInputString(text)
+{
+	$('#qsp-input-line input').val(text);
 }
 
 // На будущее
@@ -739,6 +758,18 @@ function qspCloseSystemMenu()
 	qspDialogOpened = false;
 	qspCurDialog = '';
 	qspApplyScrollsVisibility();
+}
+
+function qspInputStringChange(text)
+{
+	// Изменился текст в строке ввода
+	QspLib.setInputString(text);
+}
+
+function qspInputStringEnter()
+{
+	// Нажали Enter в строке ввода
+	QspLib.runInputString();
 }
 
 
