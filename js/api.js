@@ -484,7 +484,10 @@ function qspSetActsContent(acts, under_desc)
 		}
 	}
 
-	$("#qsp-acts").imagesLoaded().always(qspRefreshMainScroll);
+	$("#qsp-acts").imagesLoaded().always(function () {
+		qspRefreshMainScroll();
+		qspRefreshActsScroll();
+	});
 } 
 
 function qspRefreshActsScroll()
