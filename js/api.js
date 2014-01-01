@@ -611,12 +611,10 @@ function qspUpdateSkin(skin)
 	else
 		$("#qsp-wrapper-vars").hide();
  	//Показываем либо скрываем строку ввода(не реализовано)
-	/*
-     if (show)
-     $("#qsp-input-line").show();
-     else
-     $("#qsp-input-line").hide();
-     */
+	if (qspGameSkin.showInput == 1)
+		$("#qsp-input-line").show();
+	else
+		$("#qsp-input-line").hide();
 
 	// Skin callback
 	if (typeof(qspSkinOnUpdateSkin) == 'function')
