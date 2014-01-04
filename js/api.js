@@ -10,6 +10,7 @@ var qspUiBlocked = true;
 var qspSaveSlotsModeOpen = true;
 var qspGameSkin = null;
 var qspMainContent = null;
+var qspMainViewNeedScroll = false;
 var qspMainViewWasScrolled = false;
 var qspSelectedObjectIndex = -1;
 var qspInvObjs = null;
@@ -36,6 +37,7 @@ function qspInitApi() {
 	qspCurDialog = "";
 	qspUiBlocked = false;
 	qspMainViewWasScrolled = false;
+	qspMainViewNeedScroll = false;
 	qspSetDialogs();
 	
 	$(document.body).prepend('<div id="qsp-js-sandbox" style="display:none;"></div>');
@@ -178,8 +180,10 @@ function qspSetGroupedContent(content)
     // включая скин и содержимое всех окошек.
     if (typeof(content.skin) !== 'undefined')
         qspUpdateSkin(content.skin);
-    if (typeof(content.main) !== 'undefined')
+    if (typeof(content.main) !== 'undefined') {
         qspSetMainContent(content.main, true);
+		qspMainViewNeedScroll = content.scrollmain == 1;
+	}
     if (typeof(content.acts) !== 'undefined')
         qspSetActsContent(content.acts);
     if (typeof(content.vars) !== 'undefined')
@@ -439,7 +443,11 @@ function qspRefreshMainScroll()
 			if ((qspGameSkin != null) && (qspGameSkin.disableScroll == 0) && !qspMainViewWasScrolled)
             {
 				qspMainViewWasScrolled = true;
-				qsp_iScroll_main.scrollTo(0, 0, 0, false);
+				// Скроллим в конец, если новый текст добавлен к предыдущему,
+				// иначе скроллим в начало.
+				var scrollAvailableHeight = qsp_iScroll_main.maxScrollY;
+				var y = qspMainViewNeedScroll && scrollAvailableHeight < 0 ? scrollAvailableHeight : 0;
+				qsp_iScroll_main.scrollTo(0, y, 0, false);
             }
             // Skin callback
             if (typeof(qspSkinOnMainScrollRefreshed) == 'function')
