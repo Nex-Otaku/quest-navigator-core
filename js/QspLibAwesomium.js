@@ -59,6 +59,10 @@ var oldLib = {
 
 
 function onWebDeviceReady() {
+	// Самодельный диалог alert, 
+	// так как в Awesomium стандартные диалоги не работают.
+	window.alert = function(text) { QspLib.alert(text) };
+
 	qspIsDesktop = true;
 	// Сообщаем API, что нам стал известен тип устройства.
 	qspSetDevice();
