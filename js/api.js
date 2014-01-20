@@ -6,6 +6,7 @@ var qsp_iScroll_msg = null;
 
 var qspDialogOpened = true;
 var qspCurDialog = "";
+var qspSystemMenuId = "#qsp-dialog-system-menu";
 var qspUiBlocked = true;
 var qspSaveSlotsModeOpen = true;
 var qspGameSkin = null;
@@ -161,7 +162,7 @@ function qspShowSystemMenu()
 		return;
 	qspDialogOpened = true;
 	qspCurDialog = 'system-menu';
-	$("#qsp-dialog-system-menu").show();
+	$(qspSystemMenuId).show();
     qspApplyScrollsVisibility();
 	//Закрываем при клике вне диалога
 	setTimeout( function() { // Delay for Mozilla
@@ -573,6 +574,18 @@ function qspExecJS(cmd)
 
 function qspUpdateSkin(skin)
 {
+	// Если это первое заполнение скина, устанавливаем имя системного диалога.
+	// Диалог системного меню по умолчанию - "#qsp-dialog-system-menu".
+	// Когда автору требуется собирать игру и для "Полки игр", и для "standalone", 
+	// у него есть возможность задать дополнительный диалог "#qsp-dialog-system-menu-standalone".
+	// Если такой диалог создан, то он будет выбран при настройке "standalone=true" в конфиге игры,
+	// во всех остальных случаях будет выбран диалог по умолчанию.
+	if ((qspGameSkin === null) 
+		&& (skin.isStandalone == 1) 
+		&& ($("#qsp-dialog-system-menu-standalone").length)) {
+		qspSystemMenuId = "#qsp-dialog-system-menu-standalone";
+	}
+	
 	//Устанавливаем переменные оформления
 	qspGameSkin = skin;
     
@@ -763,7 +776,7 @@ function qspCloseView()
 function qspCloseSystemMenu()
 {
 	$(".qsp-skin-overlay").unbind('click', qspHandlerSystemMenuOverlayClick);
-	$('#qsp-dialog-system-menu').hide();
+	$(qspSystemMenuId).hide();
 	qspDialogOpened = false;
 	qspCurDialog = '';
 	qspApplyScrollsVisibility();
@@ -798,6 +811,7 @@ function qspSetDialogs()
 	
 	//SYSTEM MENU
 	$('#qsp-dialog-system-menu').hide();
+	$('#qsp-dialog-system-menu-standalone').hide();
 	
 	//SAVE SLOTS
 	$('#qsp-dialog-save-slots').hide();
