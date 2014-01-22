@@ -794,6 +794,14 @@ function qspInputStringEnter()
 	QspLib.runInputString();
 }
 
+function qspSelectGame()
+{
+	// Вызов диалога для открытия файла.
+	// Позже здесь будет вызов диалога полки игр.
+    QspLib.openGameFile();
+	qspCloseSystemMenu();
+}
+
 
 // Диалоги
 
