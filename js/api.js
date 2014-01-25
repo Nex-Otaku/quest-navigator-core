@@ -608,18 +608,11 @@ function qspUpdateSkin(skin)
 		$("#qsp-dialog-view .qsp-skin-overlay").show();
 		
 	//Показываем либо скрываем окно действий
-	if ($('#qsp-wrapper-acts').length) {
-		if (qspGameSkin.showActs == 1) {
-			$('#qsp-wrapper-acts').show();
-		} else {
-			$('#qsp-wrapper-acts').hide();
-		}
+	var qspActsId = $('#qsp-wrapper-acts').length ? '#qsp-wrapper-acts' : '#qsp-acts';
+	if (qspGameSkin.showActs == 1) {
+		$(qspActsId).show();
 	} else {
-		if (qspGameSkin.showActs == 1) {
-			$('#qsp-acts').show();
-		} else {
-			$('#qsp-acts').hide();
-		}
+		$(qspActsId).hide();
 	}
 	//Показываем либо скрываем окно инвентаря
 	if (qspGameSkin.showObjs == 1)
@@ -627,10 +620,11 @@ function qspUpdateSkin(skin)
 	else
 		$("#qsp-wrapper-objs").hide();
 	//Показываем либо скрываем окно дополнительного описания
+	var qspVarsId = $('#qsp-wrapper-vars').length ? '#qsp-wrapper-vars' : '#qsp-vars';
 	if (qspGameSkin.showVars == 1)
-		$("#qsp-wrapper-vars").show();
+		$(qspVarsId).show();
 	else
-		$("#qsp-wrapper-vars").hide();
+		$(qspVarsId).hide();
  	//Показываем либо скрываем строку ввода(не реализовано)
 	if (qspGameSkin.showInput == 1)
 		$("#qsp-input-line").show();
