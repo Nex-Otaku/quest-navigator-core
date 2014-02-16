@@ -302,9 +302,13 @@ function qspMenu(menu)
 	$('#qsp-dialog-user-menu').empty();
 	for (i = 0; i < menu.length; i++)
 	{
-		$('#qsp-dialog-user-menu').append("<div class='qsp-user-menu-item'><a href=\"#" + i + "\">" + 
-                                          qspApplyTemplateForTextAndImage(qspGameSkin.menuListItemFormat, menu[i].desc, menu[i].image) + 
-                                          "</a></div>");
+		if (menu[i].desc == '-') {
+			$('#qsp-dialog-user-menu').append("<div><hr></div>");
+		} else {
+			$('#qsp-dialog-user-menu').append("<div class='qsp-user-menu-item'><a href=\"#" + i + "\">" + 
+											  qspApplyTemplateForTextAndImage(qspGameSkin.menuListItemFormat, menu[i].desc, menu[i].image) + 
+											  "</a></div>");
+		}
 	}
 
     // Если менюшка вылазит за правый край, сдвигаем ее влево
