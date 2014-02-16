@@ -372,15 +372,17 @@ function qspView(path)
 	else
 	{
 		// Открываем VIEW
-		$('#qsp-dialog-view-image-container').empty();
-		$('#qsp-dialog-view-image-container').append('<img src="' + path + '">');
-		// Делаем диалог невидимым, чтобы он не дёргался при центровке
-		$('#qsp-dialog-view').css('visibility', 'hidden');
-		// Выводим его на экран (он всё ещё невидим, но теперь занимает место)
-		$('#qsp-dialog-view').show();
+		var newImageHtml = '<img src="' + path + '">';
 		
 		if (qspGameSkin.viewAlwaysShow != 1)
 		{
+			$('#qsp-dialog-view-image-container').empty();
+			$('#qsp-dialog-view-image-container').append(newImageHtml);
+			// Делаем диалог невидимым, чтобы он не дёргался при центровке
+			$('#qsp-dialog-view').css('visibility', 'hidden');
+			// Выводим его на экран (он всё ещё невидим, но теперь занимает место)
+			$('#qsp-dialog-view').show();
+
 			qspDialogOpened = true;
 			qspCurDialog = 'view';
 			$('#qsp-dialog-view-image-container').imagesLoaded().always(function() {
@@ -397,8 +399,9 @@ function qspView(path)
 		else
 		{
 			// Показываем view
-			$('#qsp-dialog-view').css('visibility', 'visible');
-			$('#qsp-dialog-view-image-container').imagesLoaded().always(qspRefreshMainScroll);
+			$('#qsp-view').empty();
+			$('#qsp-view').append(newImageHtml);
+			$('#qsp-view').imagesLoaded().always(qspRefreshMainScroll);
 		}
 	}
 }
@@ -601,12 +604,6 @@ function qspUpdateSkin(skin)
 	
 	$(document.body).css("font-size", qspGameSkin.fontSize);
     
-	// Если выставлен флаг viewAlwaysShow, то мы не рисуем оверлей
-	if (qspGameSkin.viewAlwaysShow == 1)
-		$("#qsp-dialog-view .qsp-skin-overlay").hide();
-	else
-		$("#qsp-dialog-view .qsp-skin-overlay").show();
-		
 	//Показываем либо скрываем окно действий
 	var qspActsId = $('#qsp-wrapper-acts').length ? '#qsp-wrapper-acts' : '#qsp-acts';
 	if (qspGameSkin.showActs == 1) {
@@ -760,9 +757,12 @@ function qspCloseView()
 	
 	$('#qsp-dialog-view').hide();
 	$('#qsp-dialog-view-image-container').empty();
+	$('#qsp-view').empty();
 	
-	qspDialogOpened = false;
-	qspCurDialog = '';
+	if (qspDialogOpened) {
+		qspDialogOpened = false;
+		qspCurDialog = '';
+	}
 	qspApplyScrollsVisibility();
 	return false;
 }
