@@ -70,6 +70,13 @@ function qspInitApi() {
 		}
     });
 	
+	// Обработка клавиши Escape.
+	$(document).keyup(function(e) {
+		if (e.keyCode == 27) { 
+			qspEscapeDialog(); 
+		}
+	});
+	
 	
 	// Выравниваем по центру экрана все DIV'ы с классом qsp-center
 	$(window).resize(function(){
@@ -926,11 +933,11 @@ function qspMakeRetinaPath(path)
 	return path.replace(/(.+)(\.\w{3,4})$/, "$1@2x$2");
 }
 
-function qspBackKeyPressed()
+function qspEscapeDialog()
 {
-	// Пользователь нажал кнопку BACK
-	if (qspDialogOpened)
-	{
+	// Выход из активного диалога.
+	// Пользователь нажал BACK либо Escape.
+	if (qspDialogOpened) {
 		if (qspCurDialog === 'save')
 		{
 			qspCloseSaveSlots(-1);
@@ -959,6 +966,15 @@ function qspBackKeyPressed()
 		{
 			qspCloseView();
 		}
+	}
+}
+
+function qspBackKeyPressed()
+{
+	// Пользователь нажал кнопку BACK
+	if (qspDialogOpened)
+	{
+		qspEscapeDialog();
 	}
 	else
 	{
