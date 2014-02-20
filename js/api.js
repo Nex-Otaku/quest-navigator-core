@@ -377,10 +377,12 @@ function qspView(path)
 	{
 		// Открываем VIEW
 		var newImageHtml = '<img src="' + path + '">';
-		
+
+		// Очищаем оба контейнера, так как режим могли переключить.
+		$('#qsp-dialog-view-image-container').empty();
+		$('#qsp-view').empty();
 		if (qspGameSkin.viewAlwaysShow != 1)
 		{
-			$('#qsp-dialog-view-image-container').empty();
 			$('#qsp-dialog-view-image-container').append(newImageHtml);
 			// Делаем диалог невидимым, чтобы он не дёргался при центровке
 			$('#qsp-dialog-view').css('visibility', 'hidden');
@@ -403,7 +405,6 @@ function qspView(path)
 		else
 		{
 			// Показываем view
-			$('#qsp-view').empty();
 			$('#qsp-view').append(newImageHtml);
 			$('#qsp-view').imagesLoaded().always(qspRefreshMainScroll);
 		}
