@@ -61,6 +61,8 @@ var oldLib = {
 function onWebDeviceReady() {
 	// Самодельный диалог alert, 
 	// так как в Awesomium стандартные диалоги не работают.
+	// Короткий вариант будет работать только после полной инициализации.
+	// До этого, вызываем напрямую через QspLib.
 	window.alert = function(text) { QspLib.alert(text) };
 
 	qspIsDesktop = true;
