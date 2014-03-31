@@ -21,6 +21,7 @@ var qspIsAndroid = false;
 var qspIsIos = false;
 var qspIsDesktop = false;
 var qspScreenHD = false;
+var qspLocalGames = null;
 
 var qspHandlerViewClick = function() { qspCloseView(); };
 var qspHandlerSystemMenuOverlayClick = function() { qspCloseSystemMenu(); };
@@ -77,6 +78,17 @@ function qspInitApi() {
 		}
 	});
 	
+	// Обработка ссылок в полке игр.
+	$(document).on('click', '.qsp-gamelist-item', function (ev) {
+		ev.preventDefault();
+		QspLib.selectLocalGameInGamestock($(this).attr('hash'));
+	});
+	
+	// Кнопка "Загрузить с диска".
+	$(document).on('click', '.qsp-browsefile-button', function (ev) {
+		ev.preventDefault();
+		qspSelectGame();
+	});
 	
 	// Выравниваем по центру экрана все DIV'ы с классом qsp-center
 	$(window).resize(function(){
@@ -247,6 +259,24 @@ function qspShowSaveSlotsDialog(content)
 	setTimeout( function() { // Delay for Mozilla
 			$(".qsp-skin-overlay").bind('click', qspHandlerSaveSlotsOverlayClick);
 	}, 0);
+}
+
+function qspFillLocalGamesList(games)
+{
+	// Список локальных игр.
+	qspLocalGames = games;
+	var container = $('#qsp-localgames-container');
+	if (container.length > 0) {
+		// Заполняем список.
+		container.empty();
+		for (i = 0; i < games.length; i++) {
+			game = games[i];
+			var link = '<p><a href="#" class="qsp-gamelist-item" hash="' + game.hash + '">'
+						+ game.title
+						+ '</a></p>';
+			container.append(link);
+		}
+	}
 }
 
 function qspMsg(text)
@@ -803,8 +833,15 @@ function qspInputStringEnter()
 function qspSelectGame()
 {
 	// Вызов диалога для открытия файла.
-	// Позже здесь будет вызов диалога полки игр.
     QspLib.openGameFile();
+	qspCloseSystemMenu();
+}
+
+function qspDefaultGame()
+{
+	// Запуск игры по умолчанию.
+	// Для универсального плеера, открывается "Полка игр".
+    QspLib.runDefaultGame();
 	qspCloseSystemMenu();
 }
 
