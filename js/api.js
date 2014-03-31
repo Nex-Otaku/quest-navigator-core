@@ -90,6 +90,15 @@ function qspInitApi() {
 		qspSelectGame();
 	});
 	
+    // Cкрываемый текстовый блок.
+	$(document).on('click', '.qsp-spoiler-title', function () {
+        $(this).slideUp({done: function () {
+			$(this).closest('.qsp-spoiler').find('div.qsp-spoiler-content').slideDown({done: function () {
+				qspRefreshMainScroll();
+			}});
+		}});
+    });
+	
 	// Выравниваем по центру экрана все DIV'ы с классом qsp-center
 	$(window).resize(function(){
 		$('.qsp-center').css({
@@ -269,13 +278,30 @@ function qspFillLocalGamesList(games)
 	if (container.length > 0) {
 		// Заполняем список.
 		container.empty();
+		var html = '';
+		var moreButton = games.length > 10;
 		for (i = 0; i < games.length; i++) {
 			game = games[i];
 			var link = '<p><a href="#" class="qsp-gamelist-item" hash="' + game.hash + '">'
 						+ game.title
 						+ '</a></p>';
-			container.append(link);
+			
+			// Начало скрываемого блока.
+			if (moreButton && (i == 10)) {
+				var spoilerStart = '<div class="qsp-spoiler"><div class="qsp-spoiler-title">'
+									+ 'Показать весь список (' + games.length + ' игр)'
+									+ '</div>'
+									+ '<div class="qsp-spoiler-content" style="display:none;">';
+				html += spoilerStart;
+			}
+						
+			html += link;
 		}
+		// Конец скрываемого блока.
+		if (moreButton) {
+			html += '</div></div>'
+		}
+		container.append(html);
 	}
 }
 
