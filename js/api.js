@@ -188,6 +188,21 @@ function qspShowSystemMenu()
 {
 	if (qspDialogOpened)
 		return;
+	
+	// Отключаем загрузку, если включена переменная "NOSAVE".
+	if (qspGameSkin != null) {
+		var saveButton = $(qspSystemMenuId).find('#qsp-save-button');
+		if (saveButton.length > 0) {
+			var noSave = qspGameSkin.noSave != 0;
+			if (saveButton.data('onclick') == undefined) {
+				saveButton.data('onclick', saveButton.attr('onclick'));
+			}
+			var onclick = noSave ? '' : saveButton.data('onclick');
+			saveButton.attr('onclick', onclick);
+			saveButton.toggleClass('disabled', noSave);
+		}
+	}
+		
 	qspDialogOpened = true;
 	qspCurDialog = 'system-menu';
 	$(qspSystemMenuId).show();
@@ -860,7 +875,6 @@ function qspSelectGame()
 {
 	// Вызов диалога для открытия файла.
     QspLib.openGameFile();
-	qspCloseSystemMenu();
 }
 
 function qspDefaultGame()
