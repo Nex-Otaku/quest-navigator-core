@@ -675,18 +675,6 @@ function qspUpdateSkin(skin)
 	//Устанавливаем переменные оформления
 	qspGameSkin = skin;
     
-	$(document.body).css("backgroundColor", qspGameSkin.backColor);
-
-	$(".qsp-skin-dialog").css("backgroundColor", qspGameSkin.backColor);
-	
-	$(document.body).attr("link", qspGameSkin.linkColor);
-	
-	$(document.body).css("color", qspGameSkin.fontColor);
-	
-	$(document.body).css("font-family", qspGameSkin.fontName);
-	
-	$(document.body).css("font-size", qspGameSkin.fontSize);
-    
 	//Показываем либо скрываем окно действий
 	var qspActsId = $('#qsp-wrapper-acts').length ? '#qsp-wrapper-acts' : '#qsp-acts';
 	if (qspGameSkin.showActs == 1) {
