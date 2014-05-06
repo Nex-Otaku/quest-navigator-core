@@ -317,6 +317,7 @@ function qspFillLocalGamesList(games)
 			html += '</div></div>'
 		}
 		container.append(html);
+		qspRefreshMainScroll();
 	}
 }
 
