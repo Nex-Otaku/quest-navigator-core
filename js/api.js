@@ -10,6 +10,10 @@ var qspSystemMenuId = "#qsp-dialog-system-menu";
 var qspUiBlocked = true;
 var qspSaveSlotsModeOpen = true;
 var qspGameSkin = null;
+var qspActsListItemFormat = "<table><tr><td><img src='%IMAGE%'/></td><td style='width:100%;'>%TEXT%</td></tr></table>";
+var qspObjsListItemFormat = "<table><tr><td><img src='%IMAGE%'/></td><td style='width:100%;'>%TEXT%</td></tr></table>";
+var qspObjsListSelItemFormat = "<table><tr><td><img src='%IMAGE%'/></td><td style='width:100%;color:#0000FF;'>%TEXT%</td></tr></table>";
+var qspMenuListItemFormat = "<table><tr><td><img src='%IMAGE%'/></td><td style='width:100%;'>%TEXT%</td></tr></table>";
 var qspMainContent = null;
 var qspMainViewNeedScroll = false;
 var qspMainViewWasScrolled = false;
@@ -381,13 +385,13 @@ function qspMenu(menu)
 	$('#qsp-dialog-user-menu').empty();
 	for (i = 0; i < menu.length; i++)
 	{
-		if (menu[i].desc == '-') {
-			$('#qsp-dialog-user-menu').append("<div><hr></div>");
-		} else {
-			$('#qsp-dialog-user-menu').append("<div class='qsp-user-menu-item'><a href=\"#" + i + "\">" + 
-											  qspApplyTemplateForTextAndImage(qspGameSkin.menuListItemFormat, menu[i].desc, menu[i].image) + 
-											  "</a></div>");
-		}
+		var menuItem = menu[i];
+		// Если в скине определена своя функция для создания элементов контекстного меню, используем её.
+		// Иначе создаём разметку по умолчанию.
+		var menuItemHtml = (typeof(qspSkinGetMenuItemHtml) == 'function') ?
+							qspSkinGetMenuItemHtml(menuItem, i) :
+							qspGetDefaultMenuItemHtml(menuItem, i);
+		$("#qsp-dialog-user-menu").append(menuItemHtml);
 	}
 
     // Если менюшка вылазит за правый край, сдвигаем ее влево
@@ -419,6 +423,15 @@ function qspMenu(menu)
         function(action) {
         qspCloseMenu(action);
     });
+}
+
+function qspGetDefaultMenuItemHtml(menuItem, index)
+{
+	return (menuItem.desc == '-') ? 
+		"<div><hr></div>" :
+		"<div class='qsp-user-menu-item'><a href=\"#" + index + "\">" + 
+		qspApplyTemplateForTextAndImage(qspMenuListItemFormat, menuItem.desc, menuItem.image) + 
+		"</a></div>";
 }
 
 function qspInput(text)
@@ -573,10 +586,13 @@ function qspSetActsContent(acts, under_desc)
 	if (acts)
 	{
         for (i = 0; i < acts.length; i++) {
-			$("#qsp-acts").append("<div class='qsp-action qsp-skin-button'><a " + 
-			" onclick='javascript:qspExecuteAction(\"" + i + "\");'>" + 
-                                  qspApplyTemplateForTextAndImage(qspGameSkin.actsListItemFormat, acts[i].desc, acts[i].image) + 
-                                  "</a></div>");
+			var action = acts[i];
+			// Если в скине определена своя функция для создания действий, используем её.
+			// Иначе создаём разметку по умолчанию.
+			var actionHtml = (typeof(qspSkinGetActionHtml) == 'function') ?
+								qspSkinGetActionHtml(action, i) :
+								qspGetDefaultActionHtml(action, i);
+			$("#qsp-acts").append(actionHtml);
 		}
 	}
 
@@ -585,6 +601,14 @@ function qspSetActsContent(acts, under_desc)
 		qspRefreshActsScroll();
 	});
 } 
+
+function qspGetDefaultActionHtml(action, index)
+{
+	return "<div class='qsp-action qsp-skin-button'><a " + 
+	" onclick='javascript:qspExecuteAction(\"" + index + "\");'>" + 
+	qspApplyTemplateForTextAndImage(qspActsListItemFormat, action.desc, action.image) + 
+	"</a></div>";
+}
 
 function qspRefreshActsScroll()
 {
@@ -637,19 +661,35 @@ function qspFillInvWithObjs()
 	if (qspInvObjs)
 	{
 		for (i = 0; i < qspInvObjs.length; i++) {
-            var selected = i == qspSelectedObjectIndex;
-			$("#qsp-inv").append("<div class='qsp-object'>" +
-                                 (selected ? "" : ("<a style=\"cursor: pointer;\" onclick='javascript:qspSelectObject(\"" + i + "\");'>")) +
-                                 qspApplyTemplateForTextAndImage(selected ? qspGameSkin.objsListSelItemFormat : qspGameSkin.objsListItemFormat, 
-                                                              qspInvObjs[i].desc, qspInvObjs[i].image) + 
-                                 (selected ? "" : "</a>") +
-                                 "</div>");
+			var object = qspInvObjs[i];
+			// Если в скине определена своя функция для создания предметов, используем её.
+			// Иначе создаём разметку по умолчанию.
+			var objectHtml = (typeof(qspSkinGetObjectHtml) == 'function') ?
+								qspSkinGetObjectHtml(object, i) :
+								qspGetDefaultObjectHtml(object, i);
+			$("#qsp-inv").append(objectHtml);
 		}
 		qspLoadRetinaImages('#qsp-inv img');
 	}
 	// Skin callback
 	if (typeof(qspSkinOnFillInvWithObjs) == 'function')
 		qspSkinOnFillInvWithObjs();
+}
+
+function qspGetDefaultObjectHtml(object, index)
+{
+	var selected = index == qspSelectedObjectIndex;
+	return "<div class='qsp-object'>" +
+		(selected ? 
+			"" : 
+			("<a style=\"cursor: pointer;\" onclick='javascript:qspSelectObject(\"" + index + "\");'>")
+		) +
+		qspApplyTemplateForTextAndImage(
+			selected ? qspObjsListSelItemFormat : qspObjsListItemFormat, 
+			object.desc, 
+			object.image) + 
+		(selected ? "" : "</a>") +
+		"</div>";
 }
 
 function qspExecJS(cmd) 
