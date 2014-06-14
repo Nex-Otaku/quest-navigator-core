@@ -382,7 +382,7 @@ function qspMenu(menu)
     // parameter type: JSON Array
 	qspDialogOpened = true;
 	qspCurDialog = 'user-menu';
-	$('#qsp-dialog-user-menu').empty();
+	$('#qsp-dialog-user-menu-container').empty();
 	for (i = 0; i < menu.length; i++)
 	{
 		var menuItem = menu[i];
@@ -391,7 +391,7 @@ function qspMenu(menu)
 		var menuItemHtml = (typeof(qspSkinGetMenuItemHtml) == 'function') ?
 							qspSkinGetMenuItemHtml(menuItem, i) :
 							qspGetDefaultMenuItemHtml(menuItem, i);
-		$("#qsp-dialog-user-menu").append(menuItemHtml);
+		$("#qsp-dialog-user-menu-container").append(menuItemHtml);
 	}
 
     // Если менюшка вылазит за правый край, сдвигаем ее влево
@@ -428,7 +428,7 @@ function qspMenu(menu)
 function qspGetDefaultMenuItemHtml(menuItem, index)
 {
 	return (menuItem.desc == '-') ? 
-		"<div><hr></div>" :
+		"<div class='qsp-user-menu-divider'><hr></div>" :
 		"<div class='qsp-user-menu-item'><a href=\"#" + index + "\">" + 
 		qspApplyTemplateForTextAndImage(qspMenuListItemFormat, menuItem.desc, menuItem.image) + 
 		"</a></div>";
