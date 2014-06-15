@@ -393,27 +393,25 @@ function qspMenu(menu)
 							qspGetDefaultMenuItemHtml(menuItem, i);
 		$("#qsp-dialog-user-menu-container").append(menuItemHtml);
 	}
-
-    // Если менюшка вылазит за правый край, сдвигаем ее влево
-    // Если менюшка вылазит за нижний край, сдвигаем ее вверх
+	
+	
+    // Если менюшка вылазит за правый край, сдвигаем ее влево.
+    // Если менюшка вылазит за нижний край, сдвигаем ее вверх.
     var menuX = qspMouseX;
     var menuY = qspMouseY;
-    if (qspGameSkin != null)
-    {
-	/*
-	Сделать вызов колбэка шаблона для обработки координат.
-        if (menuX + qspGameSkin.menuListW + 2*qspGameSkin.menuBorder + 2*qspGameSkin.menuPadding > $(window).width())
-        {
-            menuX = $(window).width() - qspGameSkin.menuListW - 2*qspGameSkin.menuBorder - 2*qspGameSkin.menuPadding;
-        }
-        if (menuY + $('#qsp-dialog-user-menu').height() + 2*qspGameSkin.menuBorder + 2*qspGameSkin.menuPadding > $(window).height())
-        {
-            menuY = $(window).height() - $('#qsp-dialog-user-menu').height() - 2*qspGameSkin.menuBorder - 2*qspGameSkin.menuPadding;
-        }
-		*/
-    }
-
-    
+	var menuWidth = $('#qsp-dialog-user-menu').width();
+	var menuHeight = $('#qsp-dialog-user-menu').height();
+	var windowWidth = window.pageXOffset + $(window).width();
+	var windowHeight = window.pageYOffset + $(window).height();
+	if (menuX + menuWidth > windowWidth)
+	{
+		menuX = windowWidth - menuWidth;
+	}
+	if (menuY + menuHeight > windowHeight)
+	{
+		menuY = windowHeight - menuHeight;
+	}
+    // Показываем контекстное меню.
     showContextMenu({
         menu: "qsp-dialog-user-menu",
 		item: "qsp-user-menu-item",
