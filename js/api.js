@@ -27,6 +27,9 @@ var qspIsDesktop = false;
 var qspScreenHD = false;
 var qspLocalGames = null;
 
+var qspSlotTitleText = "Слот ";
+var qspSlotEmptyText = " (пусто)";
+
 var qspHandlerViewClick = function() { qspCloseView(); };
 var qspHandlerSystemMenuOverlayClick = function() { qspCloseSystemMenu(); };
 var qspHandlerSaveSlotsOverlayClick = function() { qspCloseSaveSlots(-1); };
@@ -265,15 +268,13 @@ function qspShowSaveSlotsDialog(content)
 	
 	for (i = 0; i < slots.length; i++)
 	{
-		var empty = slots[i] == "-empty-";
-		var active = !qspSaveSlotsModeOpen || !empty;
-		var slotName = empty ? "Слот " + (i + 1) + " (пусто)" : "Слот " + slots[i];
-		var div = "<div class='qsp-save-slot-" + (active ? "enabled" : "disabled") + " qsp-skin-button'>" + 
-						(active ? "<a onclick='javascript:qspCloseSaveSlots(" + (i + 1) + ");'>" : "") + 
-   						"<div>" + slotName + "</div>" +
-						(active ? "</a>" : "") + 
-					"</div>";
-		$("#qsp-dialog-save-slots-container").append(div);
+		var slot = slots[i];
+		// Если в скине определена своя функция для заполнения слотов, используем её.
+		// Иначе создаём разметку по умолчанию.
+		var slotHtml = (typeof(qspSkinGetSaveSlotHtml) == 'function') ?
+							qspSkinGetSaveSlotHtml(slot, i) :
+							qspGetDefaultSaveSlotHtml(slot, i);
+		$("#qsp-dialog-save-slots-container").append(slotHtml);
 	}
 	qspCloseSystemMenu();
 
@@ -287,6 +288,19 @@ function qspShowSaveSlotsDialog(content)
 	setTimeout( function() { // Delay for Mozilla
 			$(".qsp-skin-overlay").bind('click', qspHandlerSaveSlotsOverlayClick);
 	}, 0);
+}
+
+function qspGetDefaultSaveSlotHtml(slot, index)
+{
+	var empty = slot == "-empty-";
+	var active = !qspSaveSlotsModeOpen || !empty;
+	var slotName = empty ? qspSlotTitleText + (i + 1) + qspSlotEmptyText : qspSlotTitleText + slot;
+	var div = "<div class='qsp-save-slot-" + (active ? "enabled" : "disabled") + " qsp-skin-button'>" + 
+					(active ? "<a onclick='javascript:qspCloseSaveSlots(" + (i + 1) + ");'>" : "") + 
+					"<div>" + slotName + "</div>" +
+					(active ? "</a>" : "") + 
+				"</div>";
+	return div;
 }
 
 function qspFillLocalGamesList(games)
