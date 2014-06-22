@@ -181,7 +181,7 @@ function qspApplyScrollsVisibility()
 		qsp_iScroll_objs.vScrollbarIndicator.style.visibility = objsScrollVisible ? 'visible' : 'hidden';
 
 	// Это хак для Андроида. Без перезаполнения основного описания, 
-	// возникают странные глюки после отображения qsp-skin-overlay (т.е. при показе любого диалога)
+	// возникают странные глюки после отображения qsp-overlay (т.е. при показе любого диалога)
 	if (qspMainContent != null)
 		qspSetMainContent(qspMainContent, false);
 	
@@ -216,7 +216,7 @@ function qspShowSystemMenu()
     qspApplyScrollsVisibility();
 	//Закрываем при клике вне диалога
 	setTimeout( function() { // Delay for Mozilla
-			$(".qsp-skin-overlay").bind('click', qspHandlerSystemMenuOverlayClick);
+			$(".qsp-overlay").bind('click', qspHandlerSystemMenuOverlayClick);
 	}, 0);
 } 
 
@@ -286,7 +286,7 @@ function qspShowSaveSlotsDialog(content)
 
 	//Закрываем при клике вне диалога
 	setTimeout( function() { // Delay for Mozilla
-			$(".qsp-skin-overlay").bind('click', qspHandlerSaveSlotsOverlayClick);
+			$(".qsp-overlay").bind('click', qspHandlerSaveSlotsOverlayClick);
 	}, 0);
 }
 
@@ -295,7 +295,7 @@ function qspGetDefaultSaveSlotHtml(slot, index)
 	var empty = slot == "-empty-";
 	var active = !qspSaveSlotsModeOpen || !empty;
 	var slotName = empty ? qspSlotTitleText + (i + 1) + qspSlotEmptyText : qspSlotTitleText + slot;
-	var div = "<div class='qsp-save-slot-" + (active ? "enabled" : "disabled") + " qsp-skin-button'>" + 
+	var div = "<div class='qsp-save-slot-" + (active ? "enabled" : "disabled") + " qsp-button'>" + 
 					(active ? "<a onclick='javascript:qspCloseSaveSlots(" + (i + 1) + ");'>" : "") + 
 					"<div>" + slotName + "</div>" +
 					(active ? "</a>" : "") + 
@@ -363,7 +363,7 @@ function qspMsg(text)
 	//Закрываем при клике вне диалога ?
 	/*
 	setTimeout( function() { // Delay for Mozilla
-			$(".qsp-skin-overlay").click( function() {
+			$(".qsp-overlay").click( function() {
 				qspCloseMsg();
 			});
 	}, 0);
@@ -616,7 +616,7 @@ function qspSetActsContent(acts, under_desc)
 
 function qspGetDefaultActionHtml(action, index)
 {
-	return "<div class='qsp-action qsp-skin-button'><a " + 
+	return "<div class='qsp-action qsp-button'><a " + 
 	" onclick='javascript:qspExecuteAction(\"" + index + "\");'>" + 
 	qspApplyTemplateForTextAndImage(qspActsListItemFormat, action.desc, action.image) + 
 	"</a></div>";
@@ -801,7 +801,7 @@ function qspRestartGame()
 
 function qspCloseSaveSlots(slot)
 {
-	$(".qsp-skin-overlay").unbind('click', qspHandlerSaveSlotsOverlayClick);
+	$(".qsp-overlay").unbind('click', qspHandlerSaveSlotsOverlayClick);
 	$("#qsp-dialog-save-slots").hide();
 	qspDialogOpened = false;
 	qspCurDialog = '';
@@ -828,7 +828,7 @@ function qspCloseSaveSlots(slot)
 
 function qspCloseMsg()
 {
-//	$(".qsp-skin-overlay").unbind('click');
+//	$(".qsp-overlay").unbind('click');
 	$("#qsp-dialog-msg").hide();
 	qspDialogOpened = false;
 	qspCurDialog = '';
@@ -893,7 +893,7 @@ function qspCloseView()
 
 function qspCloseSystemMenu()
 {
-	$(".qsp-skin-overlay").unbind('click', qspHandlerSystemMenuOverlayClick);
+	$(".qsp-overlay").unbind('click', qspHandlerSystemMenuOverlayClick);
 	$(qspSystemMenuId).hide();
 	qspDialogOpened = false;
 	qspCurDialog = '';
@@ -994,8 +994,8 @@ function qspSetPressableButtons()
 			}
 			
 			// Для кнопки задаем класс "pressed"
-			t = t.hasClass('qsp-skin-button') ? t : t.parents(".qsp-skin-button");
-			if (t.length && t.hasClass('qsp-skin-button') && !t.hasClass('pressed'))
+			t = t.hasClass('qsp-button') ? t : t.parents(".qsp-button");
+			if (t.length && t.hasClass('qsp-button') && !t.hasClass('pressed'))
 				t.addClass('pressed');
           });
     $(document).bind(END_EV, function(e) {
@@ -1013,7 +1013,7 @@ function qspSetPressableButtons()
 				t.attr('data-pressed', src1);
 			}
 
-			t = t.hasClass('qsp-skin-button') ? t : t.parents(".qsp-skin-button");
+			t = t.hasClass('qsp-button') ? t : t.parents(".qsp-button");
 			if (t.length && t.hasClass('pressed'))
 			{
 				setTimeout( function() {
