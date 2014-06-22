@@ -296,9 +296,11 @@ function qspGetDefaultSaveSlotHtml(slot, index)
 	var active = !qspSaveSlotsModeOpen || !empty;
 	var slotName = empty ? qspSlotTitleText + (i + 1) + qspSlotEmptyText : qspSlotTitleText + slot;
 	var div = "<div class='qsp-save-slot-" + (active ? "enabled" : "disabled") + " qsp-button'>" + 
+					"<div>" +
 					(active ? "<a onclick='javascript:qspCloseSaveSlots(" + (i + 1) + ");'>" : "") + 
 					"<div>" + slotName + "</div>" +
 					(active ? "</a>" : "") + 
+					"</div>" +
 				"</div>";
 	return div;
 }
