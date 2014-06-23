@@ -82,6 +82,8 @@ function qspInitApi() {
 	$(document).keyup(function(e) {
 		if (e.keyCode == 27) { 
 			qspEscapeDialog(); 
+		} else if ((e.keyCode == 13) || (e.keyCode == 32)) {
+			qspSubmitDialog();
 		}
 	});
 	
@@ -1051,6 +1053,32 @@ function qspMakeRetinaPath(path)
 	var checkForRetina = new RegExp("(.+)(@2x\\.\\w{3,4})");
 	if (checkForRetina.test(path)) return path;
 	return path.replace(/(.+)(\.\w{3,4})$/, "$1@2x$2");
+}
+
+function qspSubmitDialog()
+{
+	// Валидное закрытие диалога по кнопке подтверждения.
+	// Пользователь нажал Enter либо пробел.
+	if (qspDialogOpened) {
+		if (qspCurDialog === 'msg')
+		{
+			qspCloseMsg();
+		}
+		else if (qspCurDialog === 'error')
+		{
+			qspCloseError();
+		}
+		else if (qspCurDialog === 'input')
+		{
+			qspCloseInput(true);
+		}
+		else if (qspCurDialog === 'view')
+		{
+			// Вьюшку тоже закрываем по Enter и пробелу, хоть у неё и нет кнопки.
+			// Чисто для удобства.
+			qspCloseView();
+		}
+	}
 }
 
 function qspEscapeDialog()
