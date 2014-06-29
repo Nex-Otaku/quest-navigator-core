@@ -82,7 +82,7 @@ function qspInitApi() {
 	$(document).keyup(function(e) {
 		if (e.keyCode == 27) { 
 			qspEscapeDialog(); 
-		} else if ((e.keyCode == 13) || (e.keyCode == 32)) {
+		} else if (e.keyCode == 13) {
 			qspSubmitDialog();
 		}
 	});
@@ -954,12 +954,6 @@ function qspSetDialogs()
 	
 	//INPUT
 	$('#qsp-dialog-input').hide();
-    $('#qsp-dialog-input-text').keyup(function(event) {
-        if ((event.which === 13) || (event.keyCode === 13)) {
-            $('#qsp-button-input-ok').trigger('click');
-            return false;
-         }
-    });
 	
 	//VIEW
 	$('#qsp-dialog-view').hide();
