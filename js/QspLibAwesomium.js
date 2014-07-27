@@ -32,3 +32,8 @@ function qspLibOnInitApi() {
 			onWebDeviceReady();
 	}, 10);
 }
+
+/* Запуск API при загрузке страницы */
+$(document).ready(function(){
+	qspInitApi();
+    });
