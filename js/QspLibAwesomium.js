@@ -20,7 +20,6 @@ function onWebDeviceReady() {
 	qspIsDesktop = true;
 	// Сообщаем API, что нам стал известен тип устройства.
 	qspSetDevice();
-	QspLib.restartGame();
 }
 
 function debug(str) {
@@ -29,11 +28,11 @@ function debug(str) {
 
 function qspLibOnInitApi() {
 	setTimeout( function() { // Delay for Mozilla
-			onWebDeviceReady();
+		onWebDeviceReady();
 	}, 10);
 }
 
 /* Запуск API при загрузке страницы */
 $(document).ready(function(){
-	qspInitApi();
+		qspInitApi();
     });
