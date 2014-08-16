@@ -90,7 +90,15 @@ function qspInitApi() {
 	// Обработка ссылок в полке игр.
 	$(document).on('click', '.qsp-gamelist-item', function (ev) {
 		ev.preventDefault();
-		QspLib.selectLocalGameInGamestock($(this).attr('hash'));
+		var hash = $(this).attr('hash');
+		// Skin callback
+		if (typeof(qspSkinOnSelectLocalGameInGamestock) == 'function') {
+			// Если обработчик вернул "false",
+			// значит игру запускать не нужно.
+			if (!qspSkinOnSelectLocalGameInGamestock(hash))
+				return;
+		}
+		QspLib.selectLocalGameInGamestock(hash);
 	});
 	
 	// Кнопка "Загрузить с диска".
