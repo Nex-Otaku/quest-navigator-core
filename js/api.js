@@ -340,6 +340,9 @@ function qspFillLocalGamesList(games)
 		}
 		container.append(html);
 		qspRefreshMainScroll();
+		// Skin callback
+		if (typeof(qspSkinOnFillLocalGamesList) == 'function')
+			qspSkinOnFillLocalGamesList();
 	}
 }
 
