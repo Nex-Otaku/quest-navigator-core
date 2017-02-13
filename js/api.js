@@ -262,7 +262,7 @@ function qspSetGroupedContent(content)
     {
 		qspSplashHidden = true;
 		setTimeout( function() {
-				   cordova.exec(null, null, "SplashScreen", "hide", []);
+		            navigator.splashscreen.hide();
 				   }, 500);
     }
 }
